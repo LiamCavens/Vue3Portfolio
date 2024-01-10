@@ -1,23 +1,14 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useColorStore } from '@/stores/color'; // Adjust the path as needed
-
-const colorStore = useColorStore();
-const themeColor = ref(colorStore.color);
-
-watch(
-  () => colorStore.color, 
-  (newColor) => {
-    themeColor.value = newColor;
-  }
-);
+const props = defineProps({
+  themeColor: String
+})
 </script>
 
 <template>
   <footer class="footer">
     <p>Socials | Contact</p>
     <div class="contact-icons">
-      <a href="https://github.com/LiamCavens" :style="{ color: themeColor }" target="_blank">
+      <a href="https://github.com/LiamCavens" :style="{ color: themeColor, '--selectColor': themeColor }" target="_blank">
         <i-grommet-icons-github />
       </a>
       <a

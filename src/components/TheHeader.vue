@@ -1,19 +1,11 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
 import LiamCartoon from '../assets/images/LiamCartoon.jpg'
 import LiamCV from '../assets/files/LiamCavensCV.pdf'
-import { useColorStore } from '@/stores/color' // Adjust the path as needed
-// import { RouterLink, RouterView } from 'vue-router'
 
-const colorStore = useColorStore()
-const themeColor = ref(colorStore.color)
+const props = defineProps({
+  themeColor: String
+})
 
-watch(
-  () => colorStore.color,
-  (newColor) => {
-    themeColor.value = newColor
-  }
-)
 </script>
 
 <template>

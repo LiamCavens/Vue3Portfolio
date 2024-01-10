@@ -1,6 +1,12 @@
-/* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400&display=swap');
+@font-face {
+  font-family: 'Bungee';
+  src: url('@/assets/fonts/Bungee-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Raleway';
+  src: url('@/assets/fonts/Raleway-VariableFont_wght.ttf');
+}
 
 body {
   margin: 0;
