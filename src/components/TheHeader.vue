@@ -12,7 +12,7 @@ const props = defineProps({
   <header class="header">
     <img class="header-img" :src="LiamCartoon" alt="LCImage" />
 
-    <div class="header-titles" :style="{ color: themeColor }">
+    <div class="header-titles">
       <h2 :style="{ 'text-decoration-color': themeColor }">Liam Cavens</h2>
       <p>Software developer</p>
     </div>
@@ -46,6 +46,7 @@ const props = defineProps({
 
     h2 {
       cursor: pointer;
+      text-decoration: underline;
     }
 
     h2,
