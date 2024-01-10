@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import { useColorStore } from '@/stores/color';
 
-const props = defineProps({
-  boxHeight: String,
-  boxWidth: String
-})
+const colorStore = useColorStore();
+const updateColor = (newColor: string) => colorStore.setColor(newColor);
 
 interface Particle {
   x: number
@@ -29,7 +28,7 @@ const height = ref(window.innerHeight)
 const seedAmount = ref(0)
 const seeds = ref<Seed[]>([])
 const particles = ref<Particle[]>([])
-const auto = ref(false)
+const auto = ref(false);
 
 const ctx = computed(() => canvasRef.value?.getContext('2d'))
 
@@ -125,7 +124,7 @@ const createSeed = (x: number, y: number, angle: number, color: [number, string,
         const particle = createFirework(seed.x, seed.y, i + randomInt(-200, 200) / 100, [h, s, l])
         particles.value.push(particle)
       }
-      // emit the 'firework' event
+      updateColor(finalColor);
     }
   }
 

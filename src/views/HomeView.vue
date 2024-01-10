@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import TheFireworks from '../components/TheFireworks.vue'
+import { useColorStore } from '@/stores/color'; // Adjust the path as needed
 
-const themeColor = ref('dodgerblue')
-const changeColor = (color: string) => {
-  themeColor.value = `hsla(${color})`
-}
+const colorStore = useColorStore();
+const themeColor = ref(colorStore.color);
+
+watch(
+  () => colorStore.color, 
+  (newColor) => {
+    themeColor.value = newColor;
+  }
+);
 
 </script>
 
@@ -19,7 +25,7 @@ const changeColor = (color: string) => {
     >
       Liam Cavens
     </h1>
-    <TheFireworks @firework="changeColor" />
+    <TheFireworks />
   </main>
 </template>
 

@@ -1,7 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useColorStore } from '@/stores/color'; // Adjust the path as needed
 
-const themeColor = ref('dodgerblue')
+const colorStore = useColorStore();
+const themeColor = ref(colorStore.color);
+
+watch(
+  () => colorStore.color, 
+  (newColor) => {
+    themeColor.value = newColor;
+  }
+);
 </script>
 
 <template>
