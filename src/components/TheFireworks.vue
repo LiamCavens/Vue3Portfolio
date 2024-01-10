@@ -28,7 +28,7 @@ const height = ref(window.innerHeight)
 const seedAmount = ref(0)
 const seeds = ref<Seed[]>([])
 const particles = ref<Particle[]>([])
-const auto = ref(false);
+const auto = ref(true);
 
 const ctx = computed(() => canvasRef.value?.getContext('2d'))
 

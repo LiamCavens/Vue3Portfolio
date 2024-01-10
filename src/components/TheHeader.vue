@@ -5,7 +5,6 @@ import LiamCV from '../assets/files/LiamCavensCV.pdf'
 const props = defineProps({
   themeColor: String
 })
-
 </script>
 
 <template>
@@ -57,6 +56,13 @@ const props = defineProps({
 
   &-links {
     margin-left: auto;
+
+    .link {
+      text-decoration: none;
+      position: relative;
+      transition: all 0.3s ease-in-out 0s;
+      font-weight: 600;
+    }
   }
 }
 </style>
