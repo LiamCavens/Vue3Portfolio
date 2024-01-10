@@ -1,0 +1,16 @@
+{
+   "compilerOptions": {
+    "types": [
+      "unplugin-icons/types/vue",
+    ]
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
+}
