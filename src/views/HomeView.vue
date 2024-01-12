@@ -12,7 +12,8 @@ const props = defineProps({
     <h1
       class="bungee"
       :style="{
-        'text-shadow': `-2px -2px 0 ${themeColor}, 2px -2px 0 ${themeColor}, -2px 2px 0 ${themeColor}, 2px 2px 0 ${themeColor}`
+        'text-shadow': `-2px -2px 0 ${themeColor}, 2px -2px 0 ${themeColor}, -2px 2px 0 ${themeColor}, 2px 2px 0 ${themeColor}`,
+        'transition': 'all 0.3s ease-in-out 0s'
       }"
     >
       Liam Cavens

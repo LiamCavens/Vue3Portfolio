@@ -46,6 +46,7 @@ const props = defineProps({
     h2 {
       cursor: pointer;
       text-decoration: underline;
+      transition: all 0.3s ease-in-out 0s;
     }
 
     h2,
