@@ -120,10 +120,33 @@ const createSeed = (x: number, y: number, angle: number, color: [number, string,
       }
     },
     explode: () => {
+      // Determine if the color is light or dark based on lightness value
+      const lightnessValue = parseInt(l.replace('%', ''))
+      const isLight = lightnessValue > 50
+      
+      // Create secondary color
+      let secondaryColor: [number, string, string]
+      if (isLight) {
+        // For light colors, add a contrasting darker color
+        const contrastHue = (h + 180) % 360 // Complementary color
+        secondaryColor = [contrastHue, '100%', '40%']
+      } else {
+        // For dark colors, add a lighter version of the same color
+        secondaryColor = [h, s, '70%']
+      }
+      
+      // Create primary particles
       for (let i = 0; i < 359; i += 4) {
         const particle = createFirework(seed.x, seed.y, i + randomInt(-200, 200) / 100, [h, s, l])
         particles.value.push(particle)
       }
+      
+      // Create secondary particles (fewer, slightly offset)
+      for (let i = 0; i < 359; i += 8) {
+        const particle = createFirework(seed.x, seed.y, i + randomInt(-200, 200) / 100, secondaryColor)
+        particles.value.push(particle)
+      }
+      
       updateColor(finalColor);
     }
   }
