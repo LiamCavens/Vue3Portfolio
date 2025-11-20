@@ -1,16 +1,16 @@
 # Vue 3 Portfolio
 
-🌐 **Live Site:** [liamcavens.co.uk](https://liamcavens.co.uk/)
+**Live Site:** [liamcavens.co.uk](https://liamcavens.co.uk/)
 
 An interactive portfolio website built with Vue 3, TypeScript, and HTML5 Canvas featuring multiple dynamic background modes.
 
-## ✨ Features
+## Features
 
 ### Interactive Canvas Modes
-- 🎆 **Fireworks** - Click to launch colorful fireworks with dual-color explosions
-- 🫧 **Bubbles** - Interactive bubbles that grow when you hover over them
-- ⭐ **Constellation** - Particles that connect and follow your mouse with a space gradient text effect
-- 🌧️ **Matrix** - Digital rain with splash effects and dynamic background theming
+- **Fireworks** - Click to launch colorful fireworks with dual-color explosions
+- **Bubbles** - Interactive bubbles that grow when you hover over them
+- **Constellation** - Particles that connect and follow your mouse with a space gradient text effect
+- **Matrix** - Digital rain with splash effects and dynamic background theming
 
 ### Dynamic Theming
 - Color theme updates based on fireworks explosions
@@ -23,7 +23,7 @@ An interactive portfolio website built with Vue 3, TypeScript, and HTML5 Canvas 
 - Downloadable CV
 - Social media links (GitHub, LinkedIn, Email)
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Vue 3** - Progressive JavaScript framework
 - **TypeScript** - Type-safe development
@@ -33,7 +33,7 @@ An interactive portfolio website built with Vue 3, TypeScript, and HTML5 Canvas 
 - **Vite** - Build tool and dev server
 - **SCSS** - Styling
 
-## 📦 Project Setup
+## Project Setup
 
 ```sh
 pnpm install
@@ -57,7 +57,7 @@ pnpm build
 pnpm lint
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -83,7 +83,7 @@ src/
     └── files/
 ```
 
-## 🎨 Canvas Modes Explained
+## Canvas Modes Explained
 
 ### Fireworks Mode
 - Click anywhere to launch fireworks
@@ -113,4 +113,4 @@ src/
 
 This project is deployed at [liamcavens.co.uk](https://liamcavens.co.uk/)
 
-Built with ❤️ using Vue 3 and Canvas
+Built With Vue 3, Typescript and Canvas
