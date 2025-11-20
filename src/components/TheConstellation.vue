@@ -134,7 +134,7 @@ const animate = () => {
 
 const handleMouseMove = (event: MouseEvent) => {
   mouse.value.x = event.clientX;
-  mouse.value.y = event.clientY;
+  mouse.value.y = event.clientY - headerHeight; // Adjust for header height
 };
 
 const handleClick = () => {
