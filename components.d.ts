@@ -12,12 +12,6 @@ declare module 'vue' {
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
-    IGrommetIconsGithub: typeof import('~icons/grommet-icons/github')['default']
-    IGrommetIconsLinkedid: typeof import('~icons/grommet-icons/linkedid')['default']
-    IGrommetIconsLinkedin: typeof import('~icons/grommet-icons/linkedin')['default']
-    IGrommetIconsMail: typeof import('~icons/grommet-icons/mail')['default']
-    IMdiAccount: typeof import('~icons/mdi/account')['default']
-    PianoKey: typeof import('./src/components/piano/PianoKey.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TheBubbles: typeof import('./src/components/TheBubbles.vue')['default']
@@ -26,6 +20,5 @@ declare module 'vue' {
     TheFooter: typeof import('./src/components/TheFooter.vue')['default']
     TheHeader: typeof import('./src/components/TheHeader.vue')['default']
     TheMatrix: typeof import('./src/components/TheMatrix.vue')['default']
-    ThePiano: typeof import('./src/components/ThePiano.vue')['default']
   }
 }
