@@ -99,8 +99,11 @@ const Circle = (
 }
 
 const updateMousePosition = (event: MouseEvent) => {
-  mouse.x = event.x
-  mouse.y = event.y
+  if (canvasRef.value) {
+    const rect = canvasRef.value.getBoundingClientRect()
+    mouse.x = event.clientX - rect.left
+    mouse.y = event.clientY - rect.top
+  }
 }
 
 const onResize = () => {
