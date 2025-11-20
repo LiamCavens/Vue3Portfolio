@@ -131,8 +131,17 @@ const drawSplash = (splash: Splash) => {
 const animate = () => {
   if (!ctx.value) return;
 
-  // Semi-transparent background with theme color for trail effect
+  // First, fill with solid background color
   const match = colorStore.color.match(/hsla\((\d+),/);
+  if (match) {
+    const hue = match[1];
+    ctx.value.fillStyle = `hsla(${hue}, 50%, 5%, 1)`;
+  } else {
+    ctx.value.fillStyle = 'rgba(0, 0, 0, 1)';
+  }
+  ctx.value.fillRect(0, 0, width.value, height.value);
+
+  // Then add semi-transparent layer for trail effect
   if (match) {
     const hue = match[1];
     ctx.value.fillStyle = `hsla(${hue}, 50%, 5%, 0.05)`;

@@ -155,5 +155,10 @@ onUnmounted(() => {
   left: 0;
   z-index: -1;
   overflow: hidden;
+  background-color: #fff;
+}
+
+canvas {
+  background-color: #fff;
 }
 </style>

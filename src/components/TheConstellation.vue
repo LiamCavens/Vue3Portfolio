@@ -112,6 +112,11 @@ const drawConnections = () => {
 const animate = () => {
   if (!ctx.value) return;
 
+  // Fill with solid black background first
+  ctx.value.fillStyle = 'rgba(0, 0, 0, 1)';
+  ctx.value.fillRect(0, 0, width.value, height.value);
+  
+  // Add semi-transparent layer for trail effect
   ctx.value.fillStyle = 'rgba(0, 0, 0, 0.1)';
   ctx.value.fillRect(0, 0, width.value, height.value);
 
