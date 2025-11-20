@@ -23,8 +23,10 @@ interface Seed {
 }
 
 const canvasRef = ref()
+const headerHeight = 100
+const footerHeight = 100
 const width = ref(window.innerWidth)
-const height = ref(window.innerHeight)
+const height = ref(window.innerHeight - headerHeight - footerHeight)
 const seedAmount = ref(0)
 const seeds = ref<Seed[]>([])
 const particles = ref<Particle[]>([])
@@ -77,7 +79,7 @@ const loop = () => {
     if (auto.value && seedAmount.value % 300 === 0) {
       const seed = createSeed(
         randomInt(20, width.value - 20),
-        window.innerHeight - 100,
+        height.value,
         randomInt(175, 185),
         [randomInt(0, 359), '100%', '50%']
       )
@@ -213,7 +215,7 @@ onMounted(() => {
   const onClick = () => {
     const seed = createSeed(
       randomInt(20, width.value - 20),
-      window.innerHeight - 100,
+      height.value,
       randomInt(175, 185),
       [randomInt(0, 359), '100%', '50%']
     )
@@ -223,7 +225,7 @@ onMounted(() => {
 
   const onResize = () => {
     width.value = window.innerWidth
-    height.value = window.innerHeight
+    height.value = window.innerHeight - headerHeight - footerHeight
     if (canvasRef.value) {
       canvasRef.value.width = width.value
       canvasRef.value.height = height.value

@@ -4,8 +4,10 @@ import { useColorStore } from '@/stores/color'
 
 const colorStore = useColorStore()
 const canvasRef = ref()
+const headerHeight = 100
+const footerHeight = 100
 const width = ref(window.innerWidth)
-const height = ref(window.innerHeight)
+const height = ref(window.innerHeight - headerHeight - footerHeight)
 const ctx = computed(() => canvasRef.value?.getContext('2d'))
 const bubbles = ref<Bubble[]>([])
 const mouse = reactive({ x: 0, y: 0 })
@@ -108,7 +110,7 @@ const updateMousePosition = (event: MouseEvent) => {
 
 const onResize = () => {
   width.value = window.innerWidth
-  height.value = window.innerHeight
+  height.value = window.innerHeight - headerHeight - footerHeight
   if (canvasRef.value) {
     canvasRef.value.width = width.value
     canvasRef.value.height = height.value

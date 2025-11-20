@@ -15,8 +15,10 @@ interface Particle {
 }
 
 const canvasRef = ref<HTMLCanvasElement>();
+const headerHeight = 100;
+const footerHeight = 100;
 const width = ref(window.innerWidth);
-const height = ref(window.innerHeight);
+const height = ref(window.innerHeight - headerHeight - footerHeight);
 const particles = ref<Particle[]>([]);
 const mouse = ref({ x: 0, y: 0 });
 const connectionDistance = 150;
@@ -144,7 +146,7 @@ const handleClick = () => {
 
 const handleResize = () => {
   width.value = window.innerWidth;
-  height.value = window.innerHeight;
+  height.value = window.innerHeight - headerHeight - footerHeight;
   if (canvasRef.value) {
     canvasRef.value.width = width.value;
     canvasRef.value.height = height.value;
