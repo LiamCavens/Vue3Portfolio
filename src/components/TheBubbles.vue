@@ -20,6 +20,7 @@ interface Bubble {
 }
 
 const animate = () => {
+  if (!ctx.value || !canvasRef.value) return
   requestAnimationFrame(animate)
   ctx.value.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
   bubbles.value.forEach((bubble) => {
@@ -28,6 +29,7 @@ const animate = () => {
 }
 
 const populateBubbles = () => {
+  if (!canvasRef.value) return
   for (let i = 0; i < 500; i++) {
     let radius = Math.random() * 3 + 1
     let x = Math.random() * (canvasRef.value.width - radius * 2.5) + radius
@@ -67,6 +69,7 @@ const Circle = (
   }
 
   const update = () => {
+    if (!canvasRef.value || !ctx.value) return
     if (circleX + circleRadius > canvasRef.value.width || circleX - circleRadius < 0) {
       circleSpeedX = -circleSpeedX
     }

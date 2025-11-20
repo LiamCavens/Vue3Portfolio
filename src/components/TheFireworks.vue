@@ -54,42 +54,41 @@ const circle = (x: number, y: number, radius: number): void => {
 }
 
 const loop = () => {
-  if (ctx.value) {
-    clearCanvas()
-    ctx.value.globalCompositeOperation = 'lighter'
+  if (!ctx.value || !canvasRef.value) return
+  clearCanvas()
+  ctx.value.globalCompositeOperation = 'lighter'
 
-    seeds.value.forEach((seed, i) => {
-      if (!seed.dead) {
-        seed.move()
-        seed.draw()
-      } else {
-        seeds.value.splice(i, 1)
-      }
-    })
-
-    particles.value.forEach((particle, i) => {
-      if (!particle.dead) {
-        particle.move()
-        particle.draw()
-      } else {
-        particles.value.splice(i, 1)
-      }
-    })
-
-    if (auto.value && seedAmount.value % 300 === 0) {
-      const seed = createSeed(
-        randomInt(20, width.value - 20),
-        height.value,
-        randomInt(175, 185),
-        [randomInt(0, 359), '100%', '50%']
-      )
-      seeds.value.push(seed)
+  seeds.value.forEach((seed, i) => {
+    if (!seed.dead) {
+      seed.move()
+      seed.draw()
+    } else {
+      seeds.value.splice(i, 1)
     }
+  })
 
-    ctx.value.globalCompositeOperation = 'destination-out'
-    requestAnimationFrame(loop)
-    seedAmount.value++
+  particles.value.forEach((particle, i) => {
+    if (!particle.dead) {
+      particle.move()
+      particle.draw()
+    } else {
+      particles.value.splice(i, 1)
+    }
+  })
+
+  if (auto.value && seedAmount.value % 300 === 0) {
+    const seed = createSeed(
+      randomInt(20, width.value - 20),
+      height.value,
+      randomInt(175, 185),
+      [randomInt(0, 359), '100%', '50%']
+    )
+    seeds.value.push(seed)
   }
+
+  ctx.value.globalCompositeOperation = 'destination-out'
+  requestAnimationFrame(loop)
+  seedAmount.value++
 }
 
 const createSeed = (x: number, y: number, angle: number, color: [number, string, string]): Seed => {

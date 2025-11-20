@@ -12,7 +12,7 @@ defineProps({
   themeColor: String
 })
 
-const modeArray = ref<Mode[]>(['fireworks', 'bubbles', 'constellation', 'matrix', 'net']);
+const modeArray = ref<Mode[]>(['fireworks', 'bubbles', 'constellation', 'matrix']);
 const previousMode = ref<Mode>('fireworks');
 const dropdownOpen = ref(false);
 
