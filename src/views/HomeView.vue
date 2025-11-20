@@ -2,12 +2,27 @@
 import TheFireworks from '../components/TheFireworks.vue'
 import TheBubbles from '../components/TheBubbles.vue'
 import { useModeStore } from '@/stores/mode'
+import { ref } from 'vue'
 
 const modeStore = useModeStore()
 
-const props = defineProps({
+defineProps({
   themeColor: String
 })
+
+const hoveredIndex = ref<number | null>(null)
+
+const getLetterScale = (index: number) => {
+  if (hoveredIndex.value === null) return 1
+  
+  const distance = Math.abs(index - hoveredIndex.value)
+  
+  if (distance === 0) return 1.2
+  if (distance === 1) return 1.1
+  if (distance === 2) return 1.05
+  
+  return 1
+}
 </script>
 
 <template>
@@ -19,7 +34,14 @@ const props = defineProps({
         transition: 'all 0.3s ease-in-out 0s'
       }"
     >
-      Liam Cavens
+      <span 
+        v-for="(letter, index) in 'Liam Cavens'" 
+        :key="index" 
+        class="letter"
+        @mouseenter="hoveredIndex = index"
+        @mouseleave="hoveredIndex = null"
+        :style="{ transform: `scale(${getLetterScale(index)})` }"
+      >{{ letter }}</span>
     </h1>
     <TheFireworks v-if="modeStore.mode === 'fireworks'" />
     <TheBubbles v-else-if="modeStore.mode === 'bubbles'" />
@@ -38,6 +60,11 @@ const props = defineProps({
     font-family: 'Bungee';
     color: #fff;
     text-align: center;
+
+    .letter {
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
   }
 
   @media (max-width: 750px) {

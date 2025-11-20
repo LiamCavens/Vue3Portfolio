@@ -8,7 +8,7 @@ import { useModeStore } from '@/stores/mode';
 const modeStore = useModeStore();
 const updateMode = (newMode: ModeType) => modeStore.setMode(newMode);
 
-const props = defineProps({
+defineProps({
   themeColor: String
 })
 
@@ -23,6 +23,14 @@ const changeMode = () => {
   updateMode(nextMode);
 }
 
+const getNextModeName = () => {
+  const currentMode = modeStore.mode;
+  const currentModeIndex = modeArray.value.indexOf(currentMode);
+  const nextModeIndex = (currentModeIndex + 1) % modeArray.value.length;
+  const nextMode = modeArray.value[nextModeIndex];
+  return nextMode.charAt(0).toUpperCase() + nextMode.slice(1);
+}
+
 </script>
 
 <template>
@@ -34,7 +42,7 @@ const changeMode = () => {
       <p>Software developer</p>
     </div>
     <div class="change-mode">
-      <button @click="changeMode()">Change Mode</button>
+      <button @click="changeMode()">{{ getNextModeName() }}</button>
     </div>
     <div class="header-links">
       <a class="link" :style="{ color: themeColor }" :href="LiamCV" download>Download CV</a>
@@ -83,6 +91,26 @@ const changeMode = () => {
       position: relative;
       transition: all 0.3s ease-in-out 0s;
       font-weight: 600;
+    }
+  }
+}
+
+.change-mode {
+  margin: 20px;
+
+  button {
+    width: 120px;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    background-color: #707070;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+      background-color: #909090;
     }
   }
 }
