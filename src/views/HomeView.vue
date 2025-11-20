@@ -2,6 +2,7 @@
 import TheFireworks from '../components/TheFireworks.vue'
 import TheBubbles from '../components/TheBubbles.vue'
 import TheConstellation from '../components/TheConstellation.vue'
+import TheMatrix from '../components/TheMatrix.vue'
 import { useModeStore } from '@/stores/mode'
 import { type Mode, MODES } from '@/types/modeConstants';
 import { ref } from 'vue'
@@ -51,6 +52,7 @@ const getLetterScale = (index: number) => {
     <TheFireworks v-if="modeStore.mode === MODES.FIREWORKS" />
     <TheBubbles v-else-if="modeStore.mode === MODES.BUBBLES" />
     <TheConstellation v-else-if="modeStore.mode === MODES.CONSTELLATION" />
+    <TheMatrix v-else-if="modeStore.mode === MODES.MATRIX" />
   </main>
 </template>
 

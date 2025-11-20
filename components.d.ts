@@ -25,6 +25,7 @@ declare module 'vue' {
     TheFireworks: typeof import('./src/components/TheFireworks.vue')['default']
     TheFooter: typeof import('./src/components/TheFooter.vue')['default']
     TheHeader: typeof import('./src/components/TheHeader.vue')['default']
+    TheMatrix: typeof import('./src/components/TheMatrix.vue')['default']
     ThePiano: typeof import('./src/components/ThePiano.vue')['default']
   }
 }

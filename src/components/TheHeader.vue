@@ -12,7 +12,7 @@ defineProps({
   themeColor: String
 })
 
-const modeArray = ref<Mode[]>(['fireworks', 'bubbles', 'constellation']);
+const modeArray = ref<Mode[]>(['fireworks', 'bubbles', 'constellation', 'matrix']);
 
 // When we click change mode, we will cycle to the next item in the modeArray
 const changeMode = () => {
