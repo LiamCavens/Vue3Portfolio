@@ -1,10 +1,10 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia';
-import { type ModeType } from '@/types/modeConstants';
+import { type Mode, MODES } from '@/types/modeConstants';
 
 export const useModeStore = defineStore('mode', () => {
-  const mode = ref<ModeType>('bubbles')
-  function setMode(newMode: ModeType) {
+  const mode = ref<Mode>(MODES.BUBBLES)
+  function setMode(newMode: Mode) {
     mode.value = newMode
   }
 

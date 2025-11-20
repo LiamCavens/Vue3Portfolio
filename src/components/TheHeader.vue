@@ -2,17 +2,17 @@
 import { ref } from 'vue'
 import LiamCartoon from '../assets/images/LiamCartoon.jpg'
 import LiamCV from '../assets/files/LiamCavensCV.pdf'
-import { type ModeType } from '@/types/modeConstants';
+import { type Mode } from '@/types/modeConstants';
 import { useModeStore } from '@/stores/mode';
 
 const modeStore = useModeStore();
-const updateMode = (newMode: ModeType) => modeStore.setMode(newMode);
+const updateMode = (newMode: Mode) => modeStore.setMode(newMode);
 
 defineProps({
   themeColor: String
 })
 
-const modeArray = ref<ModeType[]>(['fireworks', 'bubbles']);
+const modeArray = ref<Mode[]>(['fireworks', 'bubbles', 'constellation']);
 
 // When we click change mode, we will cycle to the next item in the modeArray
 const changeMode = () => {
@@ -25,10 +25,7 @@ const changeMode = () => {
 
 const getNextModeName = () => {
   const currentMode = modeStore.mode;
-  const currentModeIndex = modeArray.value.indexOf(currentMode);
-  const nextModeIndex = (currentModeIndex + 1) % modeArray.value.length;
-  const nextMode = modeArray.value[nextModeIndex];
-  return nextMode.charAt(0).toUpperCase() + nextMode.slice(1);
+  return currentMode.charAt(0).toUpperCase() + currentMode.slice(1);
 }
 
 </script>
