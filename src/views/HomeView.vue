@@ -4,7 +4,7 @@ import TheBubbles from '../components/TheBubbles.vue'
 import TheConstellation from '../components/TheConstellation.vue'
 import TheMatrix from '../components/TheMatrix.vue'
 import { useModeStore } from '@/stores/mode'
-import { type Mode, MODES } from '@/types/modeConstants';
+import { MODES } from '@/types/modeConstants';
 import { ref } from 'vue'
 
 const modeStore = useModeStore()
