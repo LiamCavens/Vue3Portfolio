@@ -133,8 +133,11 @@ const animate = () => {
 };
 
 const handleMouseMove = (event: MouseEvent) => {
-  mouse.value.x = event.clientX;
-  mouse.value.y = event.clientY - headerHeight; // Adjust for header height
+  if (canvasRef.value) {
+    const rect = canvasRef.value.getBoundingClientRect();
+    mouse.value.x = event.clientX - rect.left;
+    mouse.value.y = event.clientY - rect.top;
+  }
 };
 
 const handleClick = () => {
@@ -189,10 +192,10 @@ onUnmounted(() => {
 <style scoped>
 .constellation-canvas {
   position: fixed;
-  top: 0;
+  top: 100px;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 200px);
   z-index: -1;
   background-color: #000;
 }
