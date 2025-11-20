@@ -23,5 +23,6 @@ declare module 'vue' {
     TheFooter: typeof import('./src/components/TheFooter.vue')['default']
     TheHeader: typeof import('./src/components/TheHeader.vue')['default']
     TheMatrix: typeof import('./src/components/TheMatrix.vue')['default']
+    TheNet: typeof import('./src/components/TheNet.vue')['default']
   }
 }

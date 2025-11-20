@@ -9,6 +9,6 @@ const colorStore = useColorStore()
 
 <template>
   <TheHeader :theme-color="colorStore.color" />
-  <RouterView :theme-color="colorStore.color" />
+    <RouterView :theme-color="colorStore.color" />
   <TheFooter :theme-color="colorStore.color" />
 </template>

@@ -3,6 +3,7 @@ export const MODES = {
   FIREWORKS: 'fireworks',
   CONSTELLATION: 'constellation',
   MATRIX: 'matrix',
+  NET: 'net',
   OFF: 'off'
 } as const
 
