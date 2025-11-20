@@ -1,10 +1,28 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import LiamCartoon from '../assets/images/LiamCartoon.jpg'
 import LiamCV from '../assets/files/LiamCavensCV.pdf'
+import { type ModeType } from '@/types/modeConstants';
+import { useModeStore } from '@/stores/mode';
+
+const modeStore = useModeStore();
+const updateMode = (newMode: ModeType) => modeStore.setMode(newMode);
 
 const props = defineProps({
   themeColor: String
 })
+
+const modeArray = ref<ModeType[]>(['fireworks', 'bubbles']);
+
+// When we click change mode, we will cycle to the next item in the modeArray
+const changeMode = () => {
+  const currentMode = modeStore.mode;
+  const currentModeIndex = modeArray.value.indexOf(currentMode);
+  const nextModeIndex = (currentModeIndex + 1) % modeArray.value.length;
+  const nextMode = modeArray.value[nextModeIndex];
+  updateMode(nextMode);
+}
+
 </script>
 
 <template>
@@ -15,8 +33,10 @@ const props = defineProps({
       <h2 :style="{ 'text-decoration-color': themeColor }">Liam Cavens</h2>
       <p>Software developer</p>
     </div>
+    <div class="change-mode">
+      <button @click="changeMode()">Change Mode</button>
+    </div>
     <div class="header-links">
-      <!-- <a class="link" @click="modeChange('cssPhoto')">CSS Photo Filters</a> -->
       <a class="link" :style="{ color: themeColor }" :href="LiamCV" download>Download CV</a>
     </div>
   </header>

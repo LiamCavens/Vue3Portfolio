@@ -17,10 +17,13 @@ declare module 'vue' {
     IGrommetIconsLinkedin: typeof import('~icons/grommet-icons/linkedin')['default']
     IGrommetIconsMail: typeof import('~icons/grommet-icons/mail')['default']
     IMdiAccount: typeof import('~icons/mdi/account')['default']
+    PianoKey: typeof import('./src/components/piano/PianoKey.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TheBubbles: typeof import('./src/components/TheBubbles.vue')['default']
     TheFireworks: typeof import('./src/components/TheFireworks.vue')['default']
     TheFooter: typeof import('./src/components/TheFooter.vue')['default']
     TheHeader: typeof import('./src/components/TheHeader.vue')['default']
+    ThePiano: typeof import('./src/components/ThePiano.vue')['default']
   }
 }
