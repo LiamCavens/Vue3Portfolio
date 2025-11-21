@@ -80,7 +80,7 @@ const loop = () => {
     const seed = createSeed(
       randomInt(20, width.value - 20),
       height.value,
-      randomInt(175, 185),
+      randomInt(150, 210),
       [randomInt(0, 359), '100%', '50%']
     )
     seeds.value.push(seed)
@@ -165,6 +165,7 @@ const createFirework = (
   const radius = 1
   const acceleration = -0.005
   const gravity = 0.01
+  const bounceDamping = 0.7 // Energy loss on bounce
   let opacity = 1
   let finalColor = `hsla(${color[0]}, ${color[1]}, ${color[2]}, ${opacity})`
   let verticalSpeed = 0
@@ -186,8 +187,28 @@ const createFirework = (
         opacity -= 0.005
         finalColor = `hsla(${color[0]}, ${color[1]}, ${color[2]}, ${opacity})`
         verticalSpeed += gravity
-        positionX += speed * Math.sin((Math.PI / 180) * targetAngle)
-        positionY += speed * Math.cos((Math.PI / 180) * targetAngle) + verticalSpeed
+        
+        // Calculate new position
+        const newX = positionX + speed * Math.sin((Math.PI / 180) * targetAngle)
+        const newY = positionY + speed * Math.cos((Math.PI / 180) * targetAngle) + verticalSpeed
+        
+        // Check horizontal bounds and bounce
+        if (newX <= 0 || newX >= width.value) {
+          targetAngle = 180 - targetAngle // Reflect angle horizontally
+          speed *= bounceDamping // Reduce speed on bounce
+          positionX = newX <= 0 ? 0 : width.value
+        } else {
+          positionX = newX
+        }
+        
+        // Check vertical bounds and bounce
+        if (newY >= height.value) {
+          verticalSpeed *= -bounceDamping // Reverse and dampen vertical speed
+          speed *= bounceDamping // Reduce horizontal speed too
+          positionY = height.value
+        } else {
+          positionY = newY
+        }
       } else if (!firework.dead) {
         firework.dead = true
       }
@@ -215,7 +236,7 @@ onMounted(() => {
     const seed = createSeed(
       randomInt(20, width.value - 20),
       height.value,
-      randomInt(175, 185),
+      randomInt(150, 210),
       [randomInt(0, 359), '100%', '50%']
     )
     seeds.value.push(seed)
