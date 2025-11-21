@@ -3,7 +3,6 @@ import { ref, computed, onMounted, onUnmounted, reactive } from 'vue'
 import { useColorStore } from '@/stores/color'
 
 const colorStore = useColorStore()
-const updateColor = (newColor: string) => colorStore.setColor(newColor);
 const canvasRef = ref()
 const headerHeight = 100
 const footerHeight = 100
