@@ -184,7 +184,8 @@ onUnmounted(() => {
     }
 
     &.toggle-button {
-      width: 100%;
+      width: auto;
+      min-width: 100px;
     }
   }
 }
@@ -236,6 +237,179 @@ onUnmounted(() => {
 
   &:not(:last-child) {
     border-bottom: 1px solid #505050;
+  }
+}
+
+// Responsive styles
+@media (max-width: 900px) {
+  .header {
+    padding: 0 15px;
+
+    &-img {
+      height: 60px;
+      margin: 5px;
+    }
+
+    &-titles {
+      h2 {
+        font-size: 1.2rem;
+      }
+      p {
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  .change-mode {
+    margin: 10px;
+    gap: 8px;
+
+    button {
+      width: 90px;
+      padding: 6px 12px;
+      font-size: 12px;
+      gap: 0.25rem;
+
+      &.toggle-button {
+        min-width: 80px;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    min-width: 90px;
+  }
+
+  .dropdown-item {
+    padding: 0.5rem 0.75rem;
+    font-size: 12px;
+  }
+
+  .header-links {
+    .link {
+      font-size: 0.85rem;
+    }
+  }
+}
+
+@media (max-width: 750px) {
+  .header {
+    padding: 0 10px;
+    height: auto;
+    min-height: 80px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    &-img {
+      height: 50px;
+      margin: 5px;
+    }
+
+    &-titles {
+      order: 1;
+      flex: 1;
+      min-width: 120px;
+
+      h2 {
+        font-size: 1rem;
+      }
+      p {
+        font-size: 0.75rem;
+      }
+    }
+
+    &-links {
+      order: 2;
+      margin-left: 0;
+
+      .link {
+        font-size: 0.75rem;
+      }
+    }
+  }
+
+  .change-mode {
+    order: 3;
+    margin: 5px 10px 10px;
+    width: calc(100% - 20px);
+    justify-content: flex-start;
+    gap: 6px;
+
+    button {
+      width: 110px;
+      min-width: 110px;
+      padding: 6px 10px;
+      font-size: 11px;
+
+      &.toggle-button {
+        white-space: nowrap;
+        width: 110px;
+        min-width: 110px;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    min-width: 110px;
+    width: 110px;
+  }
+
+  .dropdown-arrow {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0 8px;
+
+    &-img {
+      height: 40px;
+      margin: 3px;
+    }
+
+    &-titles {
+      h2 {
+        font-size: 0.9rem;
+      }
+      p {
+        font-size: 0.7rem;
+      }
+    }
+
+    &-links {
+      .link {
+        font-size: 0.7rem;
+      }
+    }
+  }
+
+  .change-mode {
+    margin: 5px 8px 8px;
+    width: calc(100% - 16px);
+    gap: 5px;
+
+    button {
+      width: 100px;
+      min-width: 100px;
+      padding: 5px 8px;
+      font-size: 10px;
+
+      &.toggle-button {
+        width: 100px;
+        min-width: 100px;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    min-width: 100px;
+    width: 100px;
+  }
+
+  .dropdown-item {
+    padding: 0.4rem 0.6rem;
+    font-size: 11px;
   }
 }
 </style>

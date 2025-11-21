@@ -15,10 +15,16 @@ interface Particle {
 }
 
 const canvasRef = ref<HTMLCanvasElement>();
-const headerHeight = 100;
-const footerHeight = 100;
+const getHeaderHeight = () => {
+  const header = document.querySelector('.header');
+  return header ? header.clientHeight : 100;
+};
+const getFooterHeight = () => {
+  const footer = document.querySelector('.footer');
+  return footer ? footer.clientHeight : 100;
+};
 const width = ref(window.innerWidth);
-const height = ref(window.innerHeight - headerHeight - footerHeight);
+const height = ref(window.innerHeight - getHeaderHeight() - getFooterHeight());
 const particles = ref<Particle[]>([]);
 const mouse = ref({ x: 0, y: 0 });
 const connectionDistance = 150;
@@ -149,7 +155,7 @@ const handleClick = () => {
 
 const handleResize = () => {
   width.value = window.innerWidth;
-  height.value = window.innerHeight - headerHeight - footerHeight;
+  height.value = window.innerHeight - getHeaderHeight() - getFooterHeight();
   if (canvasRef.value) {
     canvasRef.value.width = width.value;
     canvasRef.value.height = height.value;
@@ -158,8 +164,15 @@ const handleResize = () => {
 
 onMounted(() => {
   if (canvasRef.value) {
-    canvasRef.value.width = width.value;
-    canvasRef.value.height = height.value;
+    // Recalculate height after DOM is fully rendered
+    setTimeout(() => {
+      width.value = window.innerWidth
+      height.value = window.innerHeight - getHeaderHeight() - getFooterHeight()
+      if (canvasRef.value) {
+        canvasRef.value.width = width.value
+        canvasRef.value.height = height.value
+      }
+    }, 100)
   }
 
   // Initialize particles

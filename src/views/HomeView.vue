@@ -72,6 +72,7 @@ const getLetterScale = (index: number) => {
     text-align: center;
     position: relative;
     z-index: 1;
+    white-space: nowrap;
 
     .letter {
       display: inline-block;
@@ -94,9 +95,9 @@ const getLetterScale = (index: number) => {
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: galaxyShift 8s linear infinite;
-    filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.5))
-            drop-shadow(0 0 20px rgba(118, 75, 162, 0.3))
-            drop-shadow(0 0 30px rgba(79, 172, 254, 0.2));
+    filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.8))
+            drop-shadow(0 0 20px rgba(118, 75, 162, 0.6))
+            drop-shadow(0 0 30px rgba(79, 172, 254, 0.4));
   }
 
   @keyframes galaxyShift {
@@ -108,9 +109,33 @@ const getLetterScale = (index: number) => {
     }
   }
 
+  @media (max-width: 900px) {
+    .bungee {
+      font-size: 80px;
+    }
+  }
+
   @media (max-width: 750px) {
     .bungee {
       font-size: 50px;
+    }
+  }
+
+  @media (max-width: 550px) {
+    .bungee {
+      font-size: 40px;
+    }
+  }
+
+  @media (max-width: 450px) {
+    .bungee {
+      font-size: 32px;
+    }
+  }
+
+  @media (max-width: 350px) {
+    .bungee {
+      font-size: 28px;
     }
   }
 }
