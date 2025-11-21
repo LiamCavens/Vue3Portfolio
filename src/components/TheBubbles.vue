@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onUnmounted, reactive } from 'vue'
 import { useColorStore } from '@/stores/color'
 
 const colorStore = useColorStore()
+const updateColor = (newColor: string) => colorStore.setColor(newColor);
 const canvasRef = ref()
 const headerHeight = 100
 const footerHeight = 100
@@ -127,11 +128,19 @@ const clearCanvas = () => {
   }
 }
 
+const handleClick = () => {
+  // Generate a random hue between 0-359 for space-like colors
+  const hue = Math.floor(Math.random() * 360);
+  const newColor = `hsla(${hue}, 100%, 50%, 1)`;
+  colorStore.setColor(newColor);
+};
+
 onMounted(() => {
   if (canvasRef.value) {
     canvasRef.value.width = width.value
     canvasRef.value.height = height.value
     populateBubbles()
+    window.addEventListener('click', handleClick);
     animate()
   }
 
@@ -142,6 +151,7 @@ onMounted(() => {
 onUnmounted(() => {
   console.log('unmounted bubbles');
   window.removeEventListener('resize', onResize);
+  window.removeEventListener('click', handleClick);
   clearCanvas();
 })
 </script>
