@@ -139,19 +139,17 @@ onMounted(() => {
 
     <div class="timeline-container">
       <!-- Timeline tabs -->
-      <div class="timeline-tabs-wrapper">
-        <div class="timeline-tabs" ref="tabsContainer">
-          <button
-            v-for="(item, index) in portfolioItems"
-            :key="item.id"
-            class="timeline-tab"
-            :class="{ active: activeTab === index }"
-            @click="selectTab(index)"
-          >
-            <span class="tab-year">{{ item.year }}</span>
-            <span class="tab-title">{{ item.tabTitle }}</span>
-          </button>
-        </div>
+      <div class="timeline-tabs" ref="tabsContainer">
+        <button
+          v-for="(item, index) in portfolioItems"
+          :key="item.id"
+          class="timeline-tab"
+          :class="{ active: activeTab === index }"
+          @click="selectTab(index)"
+        >
+          <span class="tab-year">{{ item.year }}</span>
+          <span class="tab-title">{{ item.tabTitle }}</span>
+        </button>
       </div>
 
       <!-- Carousel content -->
