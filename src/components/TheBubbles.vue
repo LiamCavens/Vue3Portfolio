@@ -12,6 +12,14 @@ const getFooterHeight = () => {
   const footer = document.querySelector('.footer');
   return footer ? footer.clientHeight : 100;
 }
+const updateCanvasSize = () => {
+  width.value = window.innerWidth
+  height.value = window.innerHeight - getHeaderHeight() - getFooterHeight()
+  if (canvasRef.value) {
+    canvasRef.value.width = width.value
+    canvasRef.value.height = height.value
+  }
+}
 const width = ref(window.innerWidth)
 const height = ref(window.innerHeight - getHeaderHeight() - getFooterHeight())
 const ctx = computed(() => canvasRef.value?.getContext('2d'))
@@ -118,12 +126,7 @@ const updateMousePosition = (event: MouseEvent) => {
 }
 
 const onResize = () => {
-  width.value = window.innerWidth
-  height.value = window.innerHeight - getHeaderHeight() - getFooterHeight()
-  if (canvasRef.value) {
-    canvasRef.value.width = width.value
-    canvasRef.value.height = height.value
-  }
+  updateCanvasSize()
 }
 
 const clearCanvas = () => {
@@ -141,23 +144,36 @@ const handleClick = () => {
 };
 
 onMounted(() => {
+  // Setup ResizeObserver for header height changes
+  const header = document.querySelector('.header');
+  let headerObserver: ResizeObserver | null = null;
+  
+  if (header) {
+    headerObserver = new ResizeObserver(() => {
+      updateCanvasSize();
+    });
+    headerObserver.observe(header);
+  }
+
   if (canvasRef.value) {
-    // Recalculate height after DOM is fully rendered
+    // Initial setup with delay to ensure DOM is ready
     setTimeout(() => {
-      width.value = window.innerWidth
-      height.value = window.innerHeight - getHeaderHeight() - getFooterHeight()
-      if (canvasRef.value) {
-        canvasRef.value.width = width.value
-        canvasRef.value.height = height.value
-        populateBubbles()
-        animate()
-      }
+      updateCanvasSize();
+      populateBubbles()
+      animate()
     }, 100)
     window.addEventListener('click', handleClick);
   }
 
   window.addEventListener('resize', onResize)
   window.addEventListener('mousemove', updateMousePosition)
+  
+  // Cleanup observer on unmount
+  onUnmounted(() => {
+    if (headerObserver) {
+      headerObserver.disconnect();
+    }
+  });
 })
 
 onUnmounted(() => {
@@ -169,9 +185,15 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="canvasBox" :style="`height: 100%; width: 100%;`">
+  <!-- <div class="canvasBox" :style="`height: 100%; width: 100%;`">
     <canvas ref="canvasRef"></canvas>
-  </div>
+  </div> -->
+    <canvas
+    ref="canvasRef"
+    :width="width"
+    :height="height"
+    class="bubbles-canvas"
+  ></canvas>
 </template>
 
 <style scoped>
@@ -183,6 +205,16 @@ onUnmounted(() => {
   z-index: -1;
   overflow: hidden;
   background-color: #fff;
+}
+
+.bubbles-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  cursor: pointer;
 }
 
 canvas {

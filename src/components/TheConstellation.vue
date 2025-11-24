@@ -23,6 +23,14 @@ const getFooterHeight = () => {
   const footer = document.querySelector('.footer');
   return footer ? footer.clientHeight : 100;
 };
+const updateCanvasSize = () => {
+  width.value = window.innerWidth;
+  height.value = window.innerHeight - getHeaderHeight() - getFooterHeight();
+  if (canvasRef.value) {
+    canvasRef.value.width = width.value;
+    canvasRef.value.height = height.value;
+  }
+};
 const width = ref(window.innerWidth);
 const height = ref(window.innerHeight - getHeaderHeight() - getFooterHeight());
 const particles = ref<Particle[]>([]);
@@ -154,24 +162,25 @@ const handleClick = () => {
 };
 
 const handleResize = () => {
-  width.value = window.innerWidth;
-  height.value = window.innerHeight - getHeaderHeight() - getFooterHeight();
-  if (canvasRef.value) {
-    canvasRef.value.width = width.value;
-    canvasRef.value.height = height.value;
-  }
+  updateCanvasSize();
 };
 
 onMounted(() => {
+  // Setup ResizeObserver for header height changes
+  const header = document.querySelector('.header');
+  let headerObserver: ResizeObserver | null = null;
+  
+  if (header) {
+    headerObserver = new ResizeObserver(() => {
+      updateCanvasSize();
+    });
+    headerObserver.observe(header);
+  }
+
   if (canvasRef.value) {
-    // Recalculate height after DOM is fully rendered
+    // Initial setup with delay to ensure DOM is ready
     setTimeout(() => {
-      width.value = window.innerWidth
-      height.value = window.innerHeight - getHeaderHeight() - getFooterHeight()
-      if (canvasRef.value) {
-        canvasRef.value.width = width.value
-        canvasRef.value.height = height.value
-      }
+      updateCanvasSize();
     }, 100)
   }
 
@@ -184,6 +193,13 @@ onMounted(() => {
   window.addEventListener('resize', handleResize);
   window.addEventListener('click', handleClick);
   animate();
+  
+  // Cleanup observer on unmount
+  onUnmounted(() => {
+    if (headerObserver) {
+      headerObserver.disconnect();
+    }
+  });
 });
 
 onUnmounted(() => {
@@ -204,11 +220,11 @@ onUnmounted(() => {
 
 <style scoped>
 .constellation-canvas {
-  position: fixed;
-  top: 100px;
+  position: absolute;
+  top: 0;
   left: 0;
   width: 100%;
-  height: calc(100% - 200px);
+  height: 100%;
   z-index: -1;
   background-color: #000;
 }

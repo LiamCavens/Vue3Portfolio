@@ -71,7 +71,7 @@ const getLetterScale = (index: number) => {
     color: #fff;
     text-align: center;
     position: relative;
-    z-index: 1;
+    z-index: 10;
     white-space: nowrap;
 
     .letter {
@@ -98,6 +98,17 @@ const getLetterScale = (index: number) => {
     filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.8))
             drop-shadow(0 0 20px rgba(118, 75, 162, 0.6))
             drop-shadow(0 0 30px rgba(79, 172, 254, 0.4));
+    -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.2);
+  }
+
+  @media (max-width: 750px) {
+    &.constellation-mode .bungee {
+      filter: drop-shadow(0 0 15px rgba(102, 126, 234, 1))
+              drop-shadow(0 0 25px rgba(118, 75, 162, 0.9))
+              drop-shadow(0 0 35px rgba(79, 172, 254, 0.8))
+              drop-shadow(0 0 45px rgba(240, 147, 251, 0.7));
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+    }
   }
 
   @keyframes galaxyShift {

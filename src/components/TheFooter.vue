@@ -6,7 +6,7 @@ defineProps({
 
 <template>
   <footer class="footer">
-    <p>Socials | Contact</p>
+    <p class="footer-text">Socials | Contact</p>
     <div class="contact-icons">
       <a href="https://github.com/LiamCavens" :style="{ color: themeColor, '--selectColor': themeColor }" target="_blank">
         <i-grommet-icons-github />
@@ -38,7 +38,8 @@ defineProps({
   color: #c7c7c7;
   background-color: #505050;
 
-  p {
+  &-text {
+    display: none;
     margin: 0;
     font-variant: small-caps;
     .contact-icons {
@@ -70,6 +71,24 @@ defineProps({
         transition: 0.5s all ease-in;
         filter: invert(1);
       }
+    }
+  }
+}
+
+// on mobile, make footer height auto
+@media (max-width: 750px) {
+  .footer {
+    height: 100px;
+    justify-content: start;
+    margin-top: 0;
+    padding-top: 0.5rem;
+
+    &-text {
+      display: none;
+    }
+
+    .contact-icons {
+      margin-top: 0;
     }
   }
 }

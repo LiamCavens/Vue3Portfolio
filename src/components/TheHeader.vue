@@ -80,12 +80,11 @@ onUnmounted(() => {
       <div class="mode-dropdown">
         <button 
           @click.stop="toggleDropdown"
-          :disabled="modeStore.mode === 'off'"
         >
           {{ getCurrentModeName() }}
           <span class="dropdown-arrow">▼</span>
         </button>
-        <div v-if="dropdownOpen && modeStore.mode !== 'off'" class="dropdown-menu">
+        <div v-if="dropdownOpen" class="dropdown-menu">
           <button 
             v-for="mode in modeArray" 
             :key="mode"
@@ -95,9 +94,15 @@ onUnmounted(() => {
           >
             {{ getModeName(mode) }}
           </button>
+          <button 
+            class="dropdown-item mobile-only"
+            @click="toggleMode"
+          >
+            {{ modeStore.mode === 'off' ? 'Turn On' : 'Turn Off' }}
+          </button>
         </div>
       </div>
-      <button @click="toggleMode" class="toggle-button">
+      <button @click="toggleMode" class="toggle-button desktop-only">
         {{ modeStore.mode === 'off' ? 'Turn On' : 'Turn Off' }} Canvas
       </button>
     </div>
@@ -238,6 +243,14 @@ onUnmounted(() => {
   &:not(:last-child) {
     border-bottom: 1px solid #505050;
   }
+  
+  &.mobile-only {
+    display: none;
+  }
+}
+
+.desktop-only {
+  display: flex;
 }
 
 // Responsive styles
@@ -294,27 +307,29 @@ onUnmounted(() => {
 
 @media (max-width: 750px) {
   .header {
-    padding: 0 10px;
+    padding: 5px 10px;
     height: auto;
-    min-height: 80px;
+    min-height: 60px;
     flex-wrap: wrap;
     justify-content: space-between;
 
     &-img {
-      height: 50px;
-      margin: 5px;
+      height: 40px;
+      margin: 3px;
     }
 
     &-titles {
       order: 1;
       flex: 1;
-      min-width: 120px;
+      min-width: 100px;
 
       h2 {
-        font-size: 1rem;
+        font-size: 0.9rem;
+        margin: 2px 0;
       }
       p {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
+        margin: 2px 0;
       }
     }
 
@@ -323,70 +338,16 @@ onUnmounted(() => {
       margin-left: 0;
 
       .link {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
       }
     }
   }
 
   .change-mode {
     order: 3;
-    margin: 5px 10px 10px;
-    width: calc(100% - 20px);
+    margin: 5px 10px 5px;
+    width: auto;
     justify-content: flex-start;
-    gap: 6px;
-
-    button {
-      width: 110px;
-      min-width: 110px;
-      padding: 6px 10px;
-      font-size: 11px;
-
-      &.toggle-button {
-        white-space: nowrap;
-        width: 110px;
-        min-width: 110px;
-      }
-    }
-  }
-
-  .dropdown-menu {
-    min-width: 110px;
-    width: 110px;
-  }
-
-  .dropdown-arrow {
-    font-size: 0.6rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .header {
-    padding: 0 8px;
-
-    &-img {
-      height: 40px;
-      margin: 3px;
-    }
-
-    &-titles {
-      h2 {
-        font-size: 0.9rem;
-      }
-      p {
-        font-size: 0.7rem;
-      }
-    }
-
-    &-links {
-      .link {
-        font-size: 0.7rem;
-      }
-    }
-  }
-
-  .change-mode {
-    margin: 5px 8px 8px;
-    width: calc(100% - 16px);
     gap: 5px;
 
     button {
@@ -394,11 +355,6 @@ onUnmounted(() => {
       min-width: 100px;
       padding: 5px 8px;
       font-size: 10px;
-
-      &.toggle-button {
-        width: 100px;
-        min-width: 100px;
-      }
     }
   }
 
@@ -408,8 +364,70 @@ onUnmounted(() => {
   }
 
   .dropdown-item {
-    padding: 0.4rem 0.6rem;
-    font-size: 11px;
+    &.mobile-only {
+      display: block;
+      text-align: center;
+    }
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  .dropdown-arrow {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 3px 8px;
+    min-height: 55px;
+
+    &-img {
+      height: 35px;
+      margin: 2px;
+    }
+
+    &-titles {
+      h2 {
+        font-size: 0.85rem;
+        margin: 1px 0;
+      }
+      p {
+        font-size: 0.65rem;
+        margin: 1px 0;
+      }
+    }
+
+    &-links {
+      .link {
+        font-size: 0.65rem;
+      }
+    }
+  }
+
+  .change-mode {
+    margin: 3px 8px 3px;
+    width: auto;
+    gap: 4px;
+
+    button {
+      width: 90px;
+      min-width: 90px;
+      padding: 4px 6px;
+      font-size: 9px;
+    }
+  }
+
+  .dropdown-menu {
+    min-width: 90px;
+    width: 90px;
+  }
+
+  .dropdown-item {
+    padding: 0.35rem 0.5rem;
+    font-size: 10px;
   }
 }
 </style>

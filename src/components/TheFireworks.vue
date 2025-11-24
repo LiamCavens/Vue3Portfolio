@@ -31,6 +31,14 @@ const getFooterHeight = () => {
   const footer = document.querySelector('.footer');
   return footer ? footer.clientHeight : 100;
 }
+const updateCanvasSize = () => {
+  width.value = window.innerWidth
+  height.value = window.innerHeight - getHeaderHeight() - getFooterHeight()
+  if (canvasRef.value) {
+    canvasRef.value.width = width.value
+    canvasRef.value.height = height.value
+  }
+}
 const width = ref(window.innerWidth)
 const height = ref(window.innerHeight - getHeaderHeight() - getFooterHeight())
 const seedAmount = ref(0)
@@ -232,13 +240,22 @@ const createFirework = (
 }
 
 onMounted(() => {
+  // Setup ResizeObserver for header height changes
+  const header = document.querySelector('.header');
+  let headerObserver: ResizeObserver | null = null;
+  
+  if (header) {
+    headerObserver = new ResizeObserver(() => {
+      updateCanvasSize();
+      clearCanvas();
+    });
+    headerObserver.observe(header);
+  }
+
   if (canvasRef.value) {
-    // Recalculate height after DOM is fully rendered
+    // Initial setup with delay to ensure DOM is ready
     setTimeout(() => {
-      width.value = window.innerWidth
-      height.value = window.innerHeight - getHeaderHeight() - getFooterHeight()
-      canvasRef.value.width = width.value
-      canvasRef.value.height = height.value
+      updateCanvasSize();
       loop()
     }, 100)
   }
@@ -255,12 +272,7 @@ onMounted(() => {
   window.addEventListener('click', onClick)
 
   const onResize = () => {
-    width.value = window.innerWidth
-    height.value = window.innerHeight - getHeaderHeight() - getFooterHeight()
-    if (canvasRef.value) {
-      canvasRef.value.width = width.value
-      canvasRef.value.height = height.value
-    }
+    updateCanvasSize()
     clearCanvas()
   }
   window.addEventListener('resize', onResize)
@@ -275,25 +287,31 @@ onMounted(() => {
   onUnmounted(() => {
     window.removeEventListener('click', onClick)
     window.removeEventListener('resize', onResize)
+    if (headerObserver) {
+      headerObserver.disconnect();
+    }
   })
 })
 </script>
 
 <template>
-  <div class="canvasBox" :style="`height: 100%; width: 100%;`">
-    <canvas ref="canvasRef"></canvas>
-  </div>
+    <canvas
+    ref="canvasRef"
+    :width="width"
+    :height="height"
+    class="fireworks-canvas"
+  ></canvas>
 </template>
 
 <style scoped>
-.canvasBox {
-  width: 100%;
+.fireworks-canvas {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   z-index: -1;
-  overflow: hidden;
-  background-color: #fff;
+  cursor: pointer;
 }
 
 canvas {
