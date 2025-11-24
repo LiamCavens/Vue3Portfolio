@@ -139,17 +139,19 @@ onMounted(() => {
 
     <div class="timeline-container">
       <!-- Timeline tabs -->
-      <div class="timeline-tabs" ref="tabsContainer">
-        <button
-          v-for="(item, index) in portfolioItems"
-          :key="item.id"
-          class="timeline-tab"
-          :class="{ active: activeTab === index }"
-          @click="selectTab(index)"
-        >
-          <span class="tab-year">{{ item.year }}</span>
-          <span class="tab-title">{{ item.tabTitle }}</span>
-        </button>
+      <div class="timeline-tabs-wrapper">
+        <div class="timeline-tabs" ref="tabsContainer">
+          <button
+            v-for="(item, index) in portfolioItems"
+            :key="item.id"
+            class="timeline-tab"
+            :class="{ active: activeTab === index }"
+            @click="selectTab(index)"
+          >
+            <span class="tab-year">{{ item.year }}</span>
+            <span class="tab-title">{{ item.tabTitle }}</span>
+          </button>
+        </div>
       </div>
 
       <!-- Carousel content -->
@@ -383,11 +385,38 @@ onMounted(() => {
   position: relative;
 }
 
+.timeline-tabs-wrapper {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 40px;
+  
+  /* Fade masks on left and right edges */
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+  &::before {
+    left: 0;
+    background: linear-gradient(to right, #2d2d2d 0%, transparent 100%);
+  }
+  
+  &::after {
+    right: 0;
+    background: linear-gradient(to left, #2d2d2d 0%, transparent 100%);
+  }
+}
+
 .timeline-tabs {
   display: flex;
   justify-content: flex-start;
   gap: 15px;
-  margin-bottom: 40px;
   padding: 10px 20px;
   position: relative;
   
