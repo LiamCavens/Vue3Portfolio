@@ -1,0 +1,82 @@
+[
+  {
+    "id": 6,
+    "title": "Bella & Duke Sign-Up Journey",
+    "tabTitle": "Bella & Duke",
+    "year": "2020 - 2022",
+    "description": "Created a new sign-up journey for Bella & Duke, a premium raw dog food company. Initially developed interactive prototypes using Vue 2 to demonstrate the user flow and experience. As the project evolved and took a different direction, rebuilt the entire sign-up journey using pure JavaScript to meet new requirements and deliver a streamlined customer onboarding experience.",
+    "technologies": ["Vue 2", "JavaScript", "HTML", "CSS"],
+    "imageFolder": null,
+    "githubUrl": null,
+    "liveUrl": "https://www.bellaandduke.com/",
+    "liveUrlName": "Bella & Duke"
+  },
+  {
+    "id": 5,
+    "title": "Zywave Texting Application",
+    "tabTitle": "Texting App",
+    "year": "2022 - 2023",
+    "description": "Developed a standalone texting application using Twilio API to enable insurance agents to communicate with customers via SMS/MMS. Built fully responsive frontend UI, implemented user onboarding, bi-directional conversational messaging, and mass bulk texting capabilities. Created comprehensive dashboard for company admins with data visualization using Chart.js. Presented client demos, mentored junior developers, and collaborated closely with designers to deliver optimal solutions.",
+    "technologies": ["Vue 3", "Composition API", "Pinia", "Chart.js", "Twilio API", "SQL"],
+    "imageFolder": null,
+    "githubUrl": null,
+    "liveUrl": null,
+    "liveUrlName": null
+  },
+  {
+    "id": 4,
+    "title": "Valais Tourism & Hospitality",
+    "tabTitle": "Valais",
+    "year": "2023 - 2024",
+    "description": "Engineer on Vue 3/Nuxt 3 project in the tourism and hospitality sector with strong focus on accessibility (a11y) and SEO. Enabled content editors to manage pages through Contentful CMS while implementing data visualization for weather-related information using D3.js. Ensured coding standards during code reviews and initialized responsive pages aligned with design specifications.",
+    "technologies": ["Vue 3", "Nuxt 3", "GraphQL", "TypeScript", "SCSS", "i18n", "D3.js", "Contentful", "Algolia"],
+    "imageFolder": "valais",
+    "githubUrl": null,
+    "liveUrl": "https://www.valais.ch/en",
+    "liveUrlName": "Visit Valais"
+  },
+  {
+    "id": 3,
+    "title": "Fraser Yachts",
+    "tabTitle": "Fraser Yachts",
+    "year": "2024 - 2025",
+    "description": "Key Engineer on Fraser Yachts Co-Creation and Development project. Brought in to meet critical deadlines by refactoring major parts of the application including Algolia search and routing, navigation components, Swiper component upgrades (2 major versions), and yacht comparison features. Participated in all scrum ceremonies, client demos, and code reviews to ensure high-quality deliverables.",
+    "technologies": ["Vue 3", "Nuxt 3", "TypeScript", "PostCSS", "i18n", "Algolia", "Kontent.AI"],
+    "imageFolder": "fraser-yachts",
+    "githubUrl": null,
+    "liveUrl": "https://www.fraseryachts.com",
+    "liveUrlName": "Fraser Yachts"
+  },
+  {
+    "id": 2,
+    "title": "Contentful CMS Custom Apps",
+    "tabTitle": "Lonely Planet CMS",
+    "year": "2025",
+    "description": "Key Engineer on Red Ventures Content Management Strategy and Platform project. Managed multiple repositories for Lonely Planet's custom editor applications integrated with Contentful CMS. Ensured seamless operation and maintenance of custom editor apps tailored for content creation and management, while overseeing code quality, repository organization, and implementation of improvements to enhance application functionality.",
+    "technologies": ["TypeScript", "React", "Contentful CMS"],
+    "imageFolder": null,
+    "githubUrl": null,
+    "liveUrl": null,
+    "liveUrlName": null
+  },
+  {
+    "id": 1,
+    "title": "Team Organiser",
+    "tabTitle": "Team Organiser",
+    "year": "Ongoing / WIP",
+    "description": "A full-stack football team management application. Create teams, manage players with ratings, and generate balanced team pairings for games using a smart algorithm that minimizes rating differences.",
+    "technologies": [
+      "Vue 3",
+      "TypeScript",
+      "GraphQL",
+      "Apollo Server",
+      "Prisma",
+      "SQLite",
+      "JWT Auth"
+    ],
+    "imageFolder": "team-organiser",
+    "githubUrl": "https://github.com/LiamCavens/team-organiser",
+    "liveUrl": null,
+    "liveUrlName": null
+  }
+]

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import LiamCartoon from '../assets/images/LiamCartoon.jpg'
-import LiamCV from '../assets/files/LiamCavensCV.pdf'
 import { type Mode } from '@/types/modeConstants';
 import { useModeStore } from '@/stores/mode';
 
+const router = useRouter();
 const modeStore = useModeStore();
 const updateMode = (newMode: Mode) => modeStore.setMode(newMode);
 
@@ -76,6 +77,11 @@ onUnmounted(() => {
       <p>Software developer</p>
     </div>
 
+    <div class="header-links">
+      <a class="link" :class="{ active: $route.path === '/' }" :style="{ color: themeColor }" @click="router.push('/')">Home</a>
+      <a class="link" :class="{ active: $route.path === '/portfolio' }" :style="{ color: themeColor }" @click="router.push('/portfolio')">Portfolio</a>
+    </div>
+
     <div class="change-mode">
       <div class="mode-dropdown">
         <button 
@@ -105,10 +111,6 @@ onUnmounted(() => {
       <button @click="toggleMode" class="toggle-button desktop-only">
         {{ modeStore.mode === 'off' ? 'Turn On' : 'Turn Off' }} Canvas
       </button>
-    </div>
-
-    <div class="header-links">
-      <a class="link" :style="{ color: themeColor }" :href="LiamCV" download>Download CV</a>
     </div>
   </header>
 </template>
@@ -147,13 +149,37 @@ onUnmounted(() => {
   }
 
   &-links {
-    margin-left: auto;
+    font-size: 20px;
+    margin-left: 1rem;
+    gap: 1rem;
+    display: flex;
 
     .link {
       text-decoration: none;
       position: relative;
       transition: all 0.3s ease-in-out 0s;
       font-weight: 600;
+      cursor: pointer;
+      padding-bottom: 4px;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: currentColor;
+        transition: width 0.4s ease-in-out;
+      }
+
+      &.active::after {
+        width: 100%;
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
     }
   }
 }
