@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, nextTick, onMounted, computed } from 'vue'
+import { ref, computed } from 'vue'
 import LiamCV from '../assets/files/LiamCavensCV.pdf'
 import portfolioData from '../data/portfolio.json'
 
@@ -20,10 +20,12 @@ defineProps({
   themeColor: String
 })
 
-const activeTab = ref(5) // Start with the most recent (rightmost)
-const tabsContainer = ref<HTMLElement | null>(null)
-const activeImageIndex = ref(0)
-const isFullscreen = ref(false)
+const activeImageIndexes = ref<Record<number, number>>({})
+const isFullscreenData = ref<{ open: boolean; projectId: number; imageIndex: number }>({
+  open: false,
+  projectId: 0,
+  imageIndex: 0
+})
 
 // Function to import all images from a folder
 const getProjectImages = (folderName: string | null) => {
@@ -46,85 +48,67 @@ const getProjectImages = (folderName: string | null) => {
   }
 }
 
-// Load portfolio items from JSON file
-const portfolioItems = ref<PortfolioItem[]>(portfolioData)
+// Load portfolio items from JSON file (reversed to show newest first)
+const portfolioItems = ref<PortfolioItem[]>([...portfolioData].reverse())
 
-// Get images for current project
-const currentProjectImages = computed(() => {
-  const project = portfolioItems.value[activeTab.value]
-  if (!project.imageFolder) return []
+// Get images for a specific project
+const getImagesForProject = (projectId: number) => {
+  const project = portfolioItems.value.find(p => p.id === projectId)
+  if (!project || !project.imageFolder) return []
   return getProjectImages(project.imageFolder)
-})
-
-const selectTab = async (index: number) => {
-  activeTab.value = index
-  activeImageIndex.value = 0 // Reset image index when changing projects
-  await nextTick()
-  scrollToActiveTab()
 }
 
-const scrollToActiveTab = () => {
-  if (!tabsContainer.value) return
-  
-  const activeTabElement = tabsContainer.value.children[activeTab.value] as HTMLElement
-  if (!activeTabElement) return
-  
-  // Calculate the offset needed to center the active tab
-  const containerCenter = tabsContainer.value.offsetWidth / 2
-  const tabOffsetLeft = activeTabElement.offsetLeft
-  const tabWidth = activeTabElement.offsetWidth
-  const tabCenter = tabOffsetLeft + (tabWidth / 2)
-  const offset = containerCenter - tabCenter
-  
-  tabsContainer.value.style.transform = `translateX(${offset}px)`
-  tabsContainer.value.style.transition = 'transform 0.5s ease'
-}
-
-const nextProject = async () => {
-  if (activeTab.value < portfolioItems.value.length - 1) {
-    activeTab.value++
-    activeImageIndex.value = 0 // Reset image index
-    await nextTick()
-    scrollToActiveTab()
-  }
-}
-
-const previousProject = async () => {
-  if (activeTab.value > 0) {
-    activeTab.value--
-    activeImageIndex.value = 0 // Reset image index
-    await nextTick()
-    scrollToActiveTab()
+// Scroll to a specific project
+const scrollToProject = (projectId: number) => {
+  const element = document.getElementById(`project-${projectId}`)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 }
 
 // Image carousel functions
-const nextImage = () => {
-  if (activeImageIndex.value < currentProjectImages.value.length - 1) {
-    activeImageIndex.value++
+const nextImage = (projectId: number) => {
+  const images = getImagesForProject(projectId)
+  const currentIndex = activeImageIndexes.value[projectId] || 0
+  if (currentIndex < images.length - 1) {
+    activeImageIndexes.value[projectId] = currentIndex + 1
   }
 }
 
-const previousImage = () => {
-  if (activeImageIndex.value > 0) {
-    activeImageIndex.value--
+const previousImage = (projectId: number) => {
+  const currentIndex = activeImageIndexes.value[projectId] || 0
+  if (currentIndex > 0) {
+    activeImageIndexes.value[projectId] = currentIndex - 1
   }
 }
 
-const openFullscreen = () => {
-  isFullscreen.value = true
+const openFullscreen = (projectId: number, imageIndex: number) => {
+  isFullscreenData.value = {
+    open: true,
+    projectId,
+    imageIndex
+  }
 }
 
 const closeFullscreen = () => {
-  isFullscreen.value = false
+  isFullscreenData.value.open = false
 }
 
-// Center the initial tab on mount
-onMounted(() => {
-  // Use setTimeout to ensure DOM is fully rendered
-  setTimeout(() => {
-    scrollToActiveTab()
-  }, 100)
+const nextImageFullscreen = () => {
+  const images = getImagesForProject(isFullscreenData.value.projectId)
+  if (isFullscreenData.value.imageIndex < images.length - 1) {
+    isFullscreenData.value.imageIndex++
+  }
+}
+
+const previousImageFullscreen = () => {
+  if (isFullscreenData.value.imageIndex > 0) {
+    isFullscreenData.value.imageIndex--
+  }
+}
+
+const currentFullscreenImages = computed(() => {
+  return getImagesForProject(isFullscreenData.value.projectId)
 })
 </script>
 
@@ -137,140 +121,124 @@ onMounted(() => {
       </a>
     </div>
 
-    <div class="timeline-container">
-      <!-- Timeline tabs -->
-      <div class="timeline-tabs" ref="tabsContainer">
-        <button
-          v-for="(item, index) in portfolioItems"
-          :key="item.id"
-          class="timeline-tab"
-          :class="{ active: activeTab === index }"
-          @click="selectTab(index)"
-        >
-          <span class="tab-year">{{ item.year }}</span>
-          <span class="tab-title">{{ item.tabTitle }}</span>
-        </button>
-      </div>
+    <div class="portfolio-container">
+      <!-- Quick Navigation List -->
+      <nav class="project-nav">
+        <h3>Quick Navigation</h3>
+        <ul>
+          <li v-for="item in portfolioItems" :key="item.id">
+            <button @click="scrollToProject(item.id)" class="nav-button">
+              <span class="nav-year">{{ item.year }}</span>
+              <span class="nav-title">{{ item.tabTitle }}</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
 
-      <!-- Carousel content -->
-      <div class="carousel">
-        <button 
-          class="carousel-nav prev" 
-          @click="previousProject"
-          :disabled="activeTab === 0"
+      <!-- Scrollable Projects List -->
+      <div class="projects-scroll">
+        <div 
+          v-for="item in portfolioItems" 
+          :key="item.id" 
+          :id="`project-${item.id}`"
+          class="project-card"
         >
-          ‹
-        </button>
-
-        <div class="carousel-content">
-          <transition name="slide" mode="out-in">
-            <div :key="activeTab" class="project-card">
-              <!-- Image Carousel -->
-              <div v-if="currentProjectImages.length > 0" class="project-image">
-                <div class="image-carousel">
-                  <button 
-                    v-if="currentProjectImages.length > 1"
-                    class="image-nav prev" 
-                    @click="previousImage"
-                    :disabled="activeImageIndex === 0"
-                  >
-                    ‹
-                  </button>
-                  
-                  <div class="image-container" @click="openFullscreen">
-                    <img 
-                      :src="currentProjectImages[activeImageIndex]" 
-                      :alt="`${portfolioItems[activeTab].title} screenshot ${activeImageIndex + 1}`"
-                    />
-                    <div class="fullscreen-hint">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-                      </svg>
-                      Click to view fullscreen
-                    </div>
-                  </div>
-                  
-                  <button 
-                    v-if="currentProjectImages.length > 1"
-                    class="image-nav next" 
-                    @click="nextImage"
-                    :disabled="activeImageIndex === currentProjectImages.length - 1"
-                  >
-                    ›
-                  </button>
-                  
-                  <div v-if="currentProjectImages.length > 1" class="image-indicators">
-                    <span 
-                      v-for="(img, index) in currentProjectImages" 
-                      :key="index"
-                      class="indicator"
-                      :class="{ active: index === activeImageIndex }"
-                      @click="activeImageIndex = index"
-                    ></span>
-                  </div>
+          <!-- Image Carousel -->
+          <div v-if="getImagesForProject(item.id).length > 0" class="project-image">
+            <div class="image-carousel">
+              <button 
+                v-if="getImagesForProject(item.id).length > 1"
+                class="image-nav prev" 
+                @click="previousImage(item.id)"
+                :disabled="(activeImageIndexes[item.id] || 0) === 0"
+              >
+                ‹
+              </button>
+              
+              <div class="image-container" @click="openFullscreen(item.id, activeImageIndexes[item.id] || 0)">
+                <img 
+                  :src="getImagesForProject(item.id)[activeImageIndexes[item.id] || 0]" 
+                  :alt="`${item.title} screenshot ${(activeImageIndexes[item.id] || 0) + 1}`"
+                />
+                <div class="fullscreen-hint">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                  </svg>
+                  Click to view fullscreen
                 </div>
               </div>
               
-              <div class="project-details">
-                <h2>{{ portfolioItems[activeTab].title }}</h2>
-                <span class="project-year">{{ portfolioItems[activeTab].year }}</span>
-                <p class="project-description">{{ portfolioItems[activeTab].description }}</p>
-                
-                <div class="project-tech">
-                  <span 
-                    v-for="tech in portfolioItems[activeTab].technologies" 
-                    :key="tech"
-                    class="tech-tag"
-                  >
-                    {{ tech }}
-                  </span>
-                </div>
-
-                <div class="project-links">
-                  <a 
-                    v-if="portfolioItems[activeTab].githubUrl" 
-                    :href="portfolioItems[activeTab].githubUrl || undefined" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="project-link github"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                    View Code
-                  </a>
-                  <a 
-                    v-if="portfolioItems[activeTab].liveUrl" 
-                    :href="portfolioItems[activeTab].liveUrl || undefined" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="project-link live"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                      <polyline points="15 3 21 3 21 9"></polyline>
-                      <line x1="10" y1="14" x2="21" y2="3"></line>
-                    </svg>
-                    {{ portfolioItems[activeTab].liveUrlName || 'Live Demo' }}
-                  </a>
-                </div>
+              <button 
+                v-if="getImagesForProject(item.id).length > 1"
+                class="image-nav next" 
+                @click="nextImage(item.id)"
+                :disabled="(activeImageIndexes[item.id] || 0) === getImagesForProject(item.id).length - 1"
+              >
+                ›
+              </button>
+              
+              <div v-if="getImagesForProject(item.id).length > 1" class="image-indicators">
+                <span 
+                  v-for="(img, index) in getImagesForProject(item.id)" 
+                  :key="index"
+                  class="indicator"
+                  :class="{ active: index === (activeImageIndexes[item.id] || 0) }"
+                  @click="activeImageIndexes[item.id] = index"
+                ></span>
               </div>
             </div>
-          </transition>
-        </div>
+          </div>
+          
+          <div class="project-details">
+            <h2>{{ item.title }}</h2>
+            <span class="project-year">{{ item.year }}</span>
+            <p class="project-description">{{ item.description }}</p>
+            
+            <div class="project-tech">
+              <span 
+                v-for="tech in item.technologies" 
+                :key="tech"
+                class="tech-tag"
+              >
+                {{ tech }}
+              </span>
+            </div>
 
-        <button 
-          class="carousel-nav next" 
-          @click="nextProject"
-          :disabled="activeTab === portfolioItems.length - 1"
-        >
-          ›
-        </button>
+            <div class="project-links">
+              <a 
+                v-if="item.githubUrl" 
+                :href="item.githubUrl || undefined" 
+                target="_blank"
+                rel="noopener noreferrer"
+                class="project-link github"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                View Code
+              </a>
+              <a 
+                v-if="item.liveUrl" 
+                :href="item.liveUrl || undefined" 
+                target="_blank"
+                rel="noopener noreferrer"
+                class="project-link live"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+                {{ item.liveUrlName || 'Live Demo' }}
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Fullscreen Image Modal -->
-    <div v-if="isFullscreen" class="fullscreen-modal" @click="closeFullscreen">
+    <div v-if="isFullscreenData.open" class="fullscreen-modal" @click="closeFullscreen">
       <button class="close-fullscreen" @click="closeFullscreen">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -279,36 +247,36 @@ onMounted(() => {
       </button>
       
       <button 
-        v-if="currentProjectImages.length > 1"
+        v-if="currentFullscreenImages.length > 1"
         class="fullscreen-nav prev" 
-        @click.stop="previousImage"
-        :disabled="activeImageIndex === 0"
+        @click.stop="previousImageFullscreen"
+        :disabled="isFullscreenData.imageIndex === 0"
       >
         ‹
       </button>
       
       <img 
-        :src="currentProjectImages[activeImageIndex]" 
-        :alt="`${portfolioItems[activeTab].title} screenshot ${activeImageIndex + 1}`"
+        :src="currentFullscreenImages[isFullscreenData.imageIndex]" 
+        :alt="`Screenshot ${isFullscreenData.imageIndex + 1}`"
         @click.stop
       />
       
       <button 
-        v-if="currentProjectImages.length > 1"
+        v-if="currentFullscreenImages.length > 1"
         class="fullscreen-nav next" 
-        @click.stop="nextImage"
-        :disabled="activeImageIndex === currentProjectImages.length - 1"
+        @click.stop="nextImageFullscreen"
+        :disabled="isFullscreenData.imageIndex === currentFullscreenImages.length - 1"
       >
         ›
       </button>
       
-      <div v-if="currentProjectImages.length > 1" class="fullscreen-indicators">
+      <div v-if="currentFullscreenImages.length > 1" class="fullscreen-indicators">
         <span 
-          v-for="(img, index) in currentProjectImages" 
+          v-for="(img, index) in currentFullscreenImages" 
           :key="index"
           class="indicator"
-          :class="{ active: index === activeImageIndex }"
-          @click.stop="activeImageIndex = index"
+          :class="{ active: index === isFullscreenData.imageIndex }"
+          @click.stop="isFullscreenData.imageIndex = index"
         ></span>
       </div>
     </div>
@@ -375,139 +343,88 @@ onMounted(() => {
   }
 }
 
-.timeline-container {
-  max-width: 1200px;
+.portfolio-container {
+  max-width: 1400px;
   width: 100%;
   margin: 0 auto;
-  overflow: hidden;
-  position: relative;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 30px;
+  padding: 0 20px;
+  align-items: start;
 }
 
-.timeline-tabs-wrapper {
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 40px;
-  
-  /* Fade masks on left and right edges */
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100px;
-    pointer-events: none;
-    z-index: 2;
-  }
-  
-  &::before {
-    left: 0;
-    background: linear-gradient(to right, #2d2d2d 0%, transparent 100%);
-  }
-  
-  &::after {
-    right: 0;
-    background: linear-gradient(to left, #2d2d2d 0%, transparent 100%);
-  }
-}
-
-.timeline-tabs {
-  display: flex;
-  justify-content: flex-start;
-  gap: 15px;
-  padding: 10px 20px;
-  position: relative;
-  
-  /* Smooth transition for sliding */
-  transition: transform 0.5s ease;
-}
-
-.timeline-tab {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 15px 25px;
-  background-color: rgba(32, 178, 170, 0.1);
+.project-nav {
+  position: sticky;
+  top: 20px;
+  background: linear-gradient(135deg, rgba(32, 178, 170, 0.1) 0%, rgba(13, 45, 45, 0.6) 100%);
   border: 2px solid rgba(32, 178, 170, 0.3);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 140px;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 
-  .tab-year {
-    font-size: 0.9rem;
-    color: #5fd4cc;
-    font-weight: 600;
-    margin-bottom: 5px;
+  h3 {
+    color: #20b2aa;
+    font-size: 1.2rem;
+    margin: 0 0 15px 0;
+    font-family: 'Bungee';
   }
 
-  .tab-title {
-    font-size: 0.85rem;
-    color: #c7c7c7;
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
-  &:hover {
-    background-color: rgba(32, 178, 170, 0.2);
-    border-color: rgba(32, 178, 170, 0.5);
-    transform: translateY(-2px);
+  li {
+    margin: 0;
   }
 
-  &.active {
-    background-color: rgba(32, 178, 170, 0.3);
-    border-color: #20b2aa;
-    box-shadow: 0 0 20px rgba(32, 178, 170, 0.4);
-
-    .tab-year {
-      color: #20b2aa;
-    }
-
-    .tab-title {
-      color: #fff;
-      font-weight: 600;
-    }
-  }
-}
-
-.carousel {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-top: 20px;
-
-  &-nav {
-    background-color: rgba(32, 178, 170, 0.2);
-    border: 2px solid rgba(32, 178, 170, 0.4);
-    color: #5fd4cc;
-    font-size: 2rem;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+  .nav-button {
+    width: 100%;
+    background-color: rgba(32, 178, 170, 0.1);
+    border: 2px solid rgba(32, 178, 170, 0.3);
+    border-radius: 8px;
+    padding: 12px 15px;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-align: left;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    flex-direction: column;
+    gap: 4px;
 
-    &:hover:not(:disabled) {
-      background-color: rgba(32, 178, 170, 0.3);
-      border-color: #20b2aa;
-      transform: scale(1.1);
+    .nav-year {
+      font-size: 0.75rem;
+      color: #5fd4cc;
+      font-weight: 600;
     }
 
-    &:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
+    .nav-title {
+      font-size: 0.85rem;
+      color: #c7c7c7;
+      font-weight: 500;
+    }
+
+    &:hover {
+      background-color: rgba(32, 178, 170, 0.2);
+      border-color: rgba(32, 178, 170, 0.5);
+      transform: translateX(5px);
+
+      .nav-title {
+        color: #fff;
+      }
     }
   }
+}
 
-  &-content {
-    flex: 1;
-    overflow: hidden;
-    min-height: 500px;
-    display: flex;
-    align-items: center;
-  }
+.projects-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding-bottom: 40px;
 }
 
 .project-card {
@@ -518,8 +435,7 @@ onMounted(() => {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   display: grid;
   gap: 30px;
-  height: 500px;
-  width: 100%;
+  scroll-margin-top: 20px;
 
   // Use 2 columns when images exist, 1 column when no images
   &:has(.project-image) {
@@ -528,8 +444,6 @@ onMounted(() => {
   
   &:not(:has(.project-image)) {
     grid-template-columns: 1fr;
-    max-width: 800px;
-    margin: 0 auto;
   }
 }
 
@@ -886,6 +800,26 @@ onMounted(() => {
 }
 
 // Responsive styles
+@media (max-width: 1100px) {
+  .portfolio-container {
+    grid-template-columns: 200px 1fr;
+  }
+
+  .project-nav {
+    .nav-button {
+      padding: 10px;
+
+      .nav-year {
+        font-size: 0.7rem;
+      }
+
+      .nav-title {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
 @media (max-width: 900px) {
   .portfolio {
     padding: 30px 15px;
@@ -900,16 +834,39 @@ onMounted(() => {
     }
   }
 
-  .carousel-content {
-    min-height: 600px;
+  .portfolio-container {
+    grid-template-columns: 1fr;
+  }
+
+  .project-nav {
+    position: static;
+    display: flex;
+    overflow-x: auto;
+    padding: 15px 0;
+    margin-bottom: 20px;
+    border-right: none;
+    border-bottom: 2px solid rgba(32, 178, 170, 0.2);
+
+    ul {
+      display: flex;
+      gap: 10px;
+      flex-direction: row;
+    }
+
+    .nav-button {
+      flex-shrink: 0;
+      transform: none !important;
+
+      &:hover {
+        transform: translateY(-2px) !important;
+      }
+    }
   }
 
   .project-card {
     grid-template-columns: 1fr;
     gap: 20px;
     padding: 20px;
-    height: auto;
-    min-height: 400px;
   }
 
   .project-details h2 {
@@ -932,32 +889,8 @@ onMounted(() => {
     }
   }
 
-  .timeline-tabs {
-    gap: 8px;
-    margin-bottom: 25px;
-  }
-
-  .timeline-tab {
-    padding: 10px 15px;
-    min-width: 100px;
-
-    .tab-year {
-      font-size: 0.8rem;
-    }
-
-    .tab-title {
-      font-size: 0.75rem;
-    }
-  }
-
-  .carousel {
-    gap: 10px;
-
-    &-nav {
-      width: 40px;
-      height: 40px;
-      font-size: 1.5rem;
-    }
+  .projects-scroll {
+    gap: 30px;
   }
 
   .project-card {
@@ -972,6 +905,18 @@ onMounted(() => {
     font-size: 0.75rem;
     padding: 5px 10px;
   }
+
+  .project-nav .nav-button {
+    padding: 8px 12px;
+
+    .nav-year {
+      font-size: 0.65rem;
+    }
+
+    .nav-title {
+      font-size: 0.75rem;
+    }
+  }
 }
 
 @media (max-width: 480px) {
@@ -981,29 +926,6 @@ onMounted(() => {
     &-title {
       font-size: 1.5rem;
     }
-  }
-
-  .timeline-tabs {
-    gap: 5px;
-  }
-
-  .timeline-tab {
-    padding: 8px 12px;
-    min-width: 80px;
-
-    .tab-year {
-      font-size: 0.7rem;
-    }
-
-    .tab-title {
-      font-size: 0.7rem;
-    }
-  }
-
-  .carousel-nav {
-    width: 35px;
-    height: 35px;
-    font-size: 1.2rem;
   }
 
   .project-card {
@@ -1021,6 +943,18 @@ onMounted(() => {
 
     .project-description {
       font-size: 0.85rem;
+    }
+  }
+
+  .project-nav .nav-button {
+    padding: 6px 10px;
+
+    .nav-year {
+      font-size: 0.6rem;
+    }
+
+    .nav-title {
+      font-size: 0.7rem;
     }
   }
 }
