@@ -836,37 +836,30 @@ const currentFullscreenImages = computed(() => {
 
   .portfolio-container {
     grid-template-columns: 1fr;
+    padding: 0 15px;
+    width: auto;
   }
 
   .project-nav {
-    position: static;
-    display: flex;
-    overflow-x: auto;
-    padding: 15px 0;
-    margin-bottom: 20px;
-    border-right: none;
-    border-bottom: 2px solid rgba(32, 178, 170, 0.2);
-
-    ul {
-      display: flex;
-      gap: 10px;
-      flex-direction: row;
-    }
-
-    .nav-button {
-      flex-shrink: 0;
-      transform: none !important;
-
-      &:hover {
-        transform: translateY(-2px) !important;
-      }
-    }
+    display: none;
   }
 
   .project-card {
     grid-template-columns: 1fr;
     gap: 20px;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+
+    .project-details {
+      order: 1;
+    }
+
+    .project-image {
+      order: 2;
+      width: 100%;
+      min-height: 300px;
+    }
   }
 
   .project-details h2 {
@@ -889,12 +882,21 @@ const currentFullscreenImages = computed(() => {
     }
   }
 
+  .portfolio-container {
+    padding: 0 10px;
+    width: auto;
+  }
+
   .projects-scroll {
     gap: 30px;
   }
 
   .project-card {
     padding: 15px;
+
+    .project-image {
+      min-height: 250px;
+    }
   }
 
   .project-details h2 {
@@ -904,18 +906,6 @@ const currentFullscreenImages = computed(() => {
   .project-tech .tech-tag {
     font-size: 0.75rem;
     padding: 5px 10px;
-  }
-
-  .project-nav .nav-button {
-    padding: 8px 12px;
-
-    .nav-year {
-      font-size: 0.65rem;
-    }
-
-    .nav-title {
-      font-size: 0.75rem;
-    }
   }
 }
 
@@ -928,8 +918,17 @@ const currentFullscreenImages = computed(() => {
     }
   }
 
+  .portfolio-container {
+    padding: 0 8px;
+    width: auto;
+  }
+
   .project-card {
     padding: 12px;
+
+    .project-image {
+      min-height: 200px;
+    }
   }
 
   .project-details {
@@ -943,18 +942,6 @@ const currentFullscreenImages = computed(() => {
 
     .project-description {
       font-size: 0.85rem;
-    }
-  }
-
-  .project-nav .nav-button {
-    padding: 6px 10px;
-
-    .nav-year {
-      font-size: 0.6rem;
-    }
-
-    .nav-title {
-      font-size: 0.7rem;
     }
   }
 }
