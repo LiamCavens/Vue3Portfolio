@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import TheFireworks from '../components/TheFireworks.vue'
-import TheBubbles from '../components/TheBubbles.vue'
-import TheConstellation from '../components/TheConstellation.vue'
-import TheMatrix from '../components/TheMatrix.vue'
+import TheFireworks from '../components/canvas/TheFireworks.vue'
+import TheBubbles from '../components/canvas/TheBubbles.vue'
+import TheConstellation from '../components/canvas/TheConstellation.vue'
+import TheMatrix from '../components/canvas/TheMatrix.vue'
 import { useModeStore } from '@/stores/mode'
 import { MODES } from '@/types/modeConstants';
 import { ref } from 'vue'

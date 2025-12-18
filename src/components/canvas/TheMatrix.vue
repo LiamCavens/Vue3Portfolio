@@ -21,6 +21,7 @@ interface Drop {
   speed: number;
   chars: string[];
   opacity: number[];
+  xOffsets: number[]; // Horizontal offset for each character to flow around cursor
 }
 
 interface Splash {
@@ -40,6 +41,9 @@ const splashes = ref<Splash[]>([]);
 const fontSize = 16;
 const columns = ref(0);
 const footerHeight = 100; // Height of the footer
+const mouseX = ref(0);
+const mouseY = ref(0);
+const bubbleRadius = 80; // Radius of the protective bubble
 
 // Matrix characters - mix of katakana, latin, and numbers
 const matrixChars = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -50,11 +54,13 @@ const createDrop = (columnIndex: number): Drop => {
   const charsInColumn = Math.floor(height.value / fontSize);
   const chars: string[] = [];
   const opacity: number[] = [];
+  const xOffsets: number[] = [];
   
   // Initialize with random characters
   for (let i = 0; i < charsInColumn; i++) {
     chars.push(matrixChars[Math.floor(Math.random() * matrixChars.length)]);
     opacity.push(0);
+    xOffsets.push(0); // Start with no offset
   }
 
   return {
@@ -62,7 +68,8 @@ const createDrop = (columnIndex: number): Drop => {
     y: Math.random() * -height.value, // Start above screen
     speed: Math.random() * 3 + 2, // Random speed between 2-5
     chars,
-    opacity
+    opacity,
+    xOffsets
   };
 };
 
@@ -82,13 +89,43 @@ const drawDrop = (drop: Drop) => {
 
   const currentRow = Math.floor(drop.y / fontSize);
   
-  // Update character opacities for trailing effect
+  // Update character opacities and offsets for flowing effect
   for (let i = 0; i < drop.chars.length; i++) {
     const distanceFromHead = currentRow - i;
+    const charY = i * fontSize;
+    // Adjust for text baseline - characters are drawn from baseline, not top
+    const charCenterY = charY - fontSize / 2;
+    
+    // Check if this character is within the bubble
+    const distanceToMouseForChar = Math.sqrt(
+      Math.pow(drop.x + drop.xOffsets[i] - mouseX.value, 2) + 
+      Math.pow(charCenterY - mouseY.value, 2)
+    );
+    
+    // Apply horizontal offset to flow around cursor
+    if (distanceToMouseForChar < bubbleRadius) {
+      const angle = Math.atan2(charCenterY - mouseY.value, drop.x + drop.xOffsets[i] - mouseX.value);
+      const repulsionStrength = (1 - distanceToMouseForChar / bubbleRadius) * 3;
+      
+      // Smoothly push character away horizontally
+      const targetOffset = Math.cos(angle) * repulsionStrength * 8;
+      drop.xOffsets[i] += (targetOffset - drop.xOffsets[i]) * 0.15; // Smooth interpolation
+    } else {
+      // Gradually return to original position
+      drop.xOffsets[i] *= 0.95;
+    }
     
     if (distanceFromHead >= 0 && distanceFromHead < 20) {
       // Fade from bright to dark
-      drop.opacity[i] = Math.max(0, 1 - (distanceFromHead / 20));
+      let baseOpacity = Math.max(0, 1 - (distanceFromHead / 20));
+      
+      // Slightly reduce opacity near the cursor bubble for fade effect
+      if (distanceToMouseForChar < bubbleRadius * 0.5) {
+        const bubbleFactor = distanceToMouseForChar / (bubbleRadius * 0.5);
+        baseOpacity *= bubbleFactor;
+      }
+      
+      drop.opacity[i] = baseOpacity;
       
       // Occasionally change the character
       if (Math.random() > 0.95) {
@@ -99,10 +136,11 @@ const drawDrop = (drop: Drop) => {
     }
   }
 
-  // Draw all visible characters in this column
+  // Draw all visible characters in this column with their offsets
   for (let i = 0; i < drop.chars.length; i++) {
     if (drop.opacity[i] > 0) {
       const yPos = i * fontSize;
+      const xPos = drop.x + drop.xOffsets[i]; // Apply horizontal offset
       
       // Use color from color store with opacity
       ctx.value.fillStyle = `${colorStore.color.replace('1)', `${drop.opacity[i]})`)}`;
@@ -113,7 +151,7 @@ const drawDrop = (drop: Drop) => {
       }
       
       ctx.value.font = `${fontSize}px monospace`;
-      ctx.value.fillText(drop.chars[i], drop.x, yPos);
+      ctx.value.fillText(drop.chars[i], xPos, yPos);
     }
   }
 };
@@ -167,8 +205,10 @@ const animate = () => {
   });
 
   drops.value.forEach((drop, index) => {
-    drawDrop(drop);
+    // Normal falling behavior - drops fall straight down
     drop.y += drop.speed;
+    
+    drawDrop(drop);
 
     // Check if drop hits footer area
     const footerY = height.value - footerHeight;
@@ -193,6 +233,11 @@ const handleClick = () => {
   const hue = Math.floor(Math.random() * 360);
   const newColor = `hsla(${hue}, 100%, 50%, 1)`;
   colorStore.setColor(newColor);
+};
+
+const handleMouseMove = (event: MouseEvent) => {
+  mouseX.value = event.clientX;
+  mouseY.value = event.clientY;
 };
 
 const handleResize = () => {
@@ -233,12 +278,14 @@ onMounted(() => {
 
   window.addEventListener('resize', handleResize);
   window.addEventListener('click', handleClick);
+  window.addEventListener('mousemove', handleMouseMove);
   animate();
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
   window.removeEventListener('click', handleClick);
+  window.removeEventListener('mousemove', handleMouseMove);
 });
 </script>
 

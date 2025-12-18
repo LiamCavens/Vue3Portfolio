@@ -17,11 +17,11 @@ declare module 'vue' {
     IGrommetIconsMail: typeof import('~icons/grommet-icons/mail')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    TheBubbles: typeof import('./src/components/TheBubbles.vue')['default']
-    TheConstellation: typeof import('./src/components/TheConstellation.vue')['default']
-    TheFireworks: typeof import('./src/components/TheFireworks.vue')['default']
+    TheBubbles: typeof import('./src/components/canvas/TheBubbles.vue')['default']
+    TheConstellation: typeof import('./src/components/canvas/TheConstellation.vue')['default']
+    TheFireworks: typeof import('./src/components/canvas/TheFireworks.vue')['default']
     TheFooter: typeof import('./src/components/TheFooter.vue')['default']
     TheHeader: typeof import('./src/components/TheHeader.vue')['default']
-    TheMatrix: typeof import('./src/components/TheMatrix.vue')['default']
+    TheMatrix: typeof import('./src/components/canvas/TheMatrix.vue')['default']
   }
 }
