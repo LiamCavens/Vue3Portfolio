@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import LiamCV from '../assets/files/LiamCavensCV.pdf'
 import portfolioData from '../data/portfolio.json'
 
@@ -26,6 +26,7 @@ const isFullscreenData = ref<{ open: boolean; projectId: number; imageIndex: num
   projectId: 0,
   imageIndex: 0
 })
+const activeProjectId = ref<number | null>(null)
 
 // Function to import all images from a folder
 const getProjectImages = (folderName: string | null) => {
@@ -110,6 +111,35 @@ const previousImageFullscreen = () => {
 const currentFullscreenImages = computed(() => {
   return getImagesForProject(isFullscreenData.value.projectId)
 })
+
+// Intersection Observer to track active project
+const observerCallback = (entries: IntersectionObserverEntry[]) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+      const projectId = entry.target.id.replace('project-', '')
+      activeProjectId.value = parseInt(projectId)
+    }
+  })
+}
+
+onMounted(() => {
+  const observer = new IntersectionObserver(observerCallback, {
+    root: null,
+    rootMargin: '-20% 0px -20% 0px',
+    threshold: [0, 0.25, 0.5, 0.75, 1]
+  })
+
+  portfolioItems.value.forEach(item => {
+    const element = document.getElementById(`project-${item.id}`)
+    if (element) {
+      observer.observe(element)
+    }
+  })
+
+  onUnmounted(() => {
+    observer.disconnect()
+  })
+})
 </script>
 
 <template>
@@ -124,10 +154,13 @@ const currentFullscreenImages = computed(() => {
     <div class="portfolio-container">
       <!-- Quick Navigation List -->
       <nav class="project-nav">
-        <h3>Quick Navigation</h3>
         <ul>
           <li v-for="item in portfolioItems" :key="item.id">
-            <button @click="scrollToProject(item.id)" class="nav-button">
+            <button 
+              @click="scrollToProject(item.id)" 
+              class="nav-button"
+              :class="{ active: activeProjectId === item.id }"
+            >
               <span class="nav-year">{{ item.year }}</span>
               <span class="nav-title">{{ item.tabTitle }}</span>
             </button>
@@ -345,7 +378,7 @@ const currentFullscreenImages = computed(() => {
 
 .portfolio-container {
   max-width: 1400px;
-  width: 100%;
+  width: auto;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 250px 1fr;
@@ -415,6 +448,21 @@ const currentFullscreenImages = computed(() => {
 
       .nav-title {
         color: #fff;
+      }
+    }
+
+    &.active {
+      background-color: rgba(32, 178, 170, 0.3);
+      border-color: #20b2aa;
+      border-width: 3px;
+
+      .nav-year {
+        color: #20b2aa;
+      }
+
+      .nav-title {
+        color: #fff;
+        font-weight: 600;
       }
     }
   }
