@@ -354,24 +354,27 @@ onMounted(() => {
 
   .download-cv-btn {
     display: inline-block;
-    padding: 12px 30px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #0a1f1f;
+    padding: 10px 24px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
     background-color: #20b2aa;
     text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0 4px 15px rgba(32, 178, 170, 0.3);
+    border-radius: 4px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 
     &:hover {
-      background-color: #5fd4cc;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(32, 178, 170, 0.5);
+      background-color: #1a9991;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 
     &:active {
       transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
   }
 }
@@ -390,11 +393,12 @@ onMounted(() => {
 .project-nav {
   position: sticky;
   top: 20px;
-  background: linear-gradient(135deg, rgba(32, 178, 170, 0.1) 0%, rgba(13, 45, 45, 0.6) 100%);
-  border: 2px solid rgba(32, 178, 170, 0.3);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
   h3 {
     color: #20b2aa;
@@ -418,12 +422,13 @@ onMounted(() => {
 
   .nav-button {
     width: 100%;
-    background-color: rgba(32, 178, 170, 0.1);
-    border: 2px solid rgba(32, 178, 170, 0.3);
-    border-radius: 8px;
-    padding: 12px 15px;
+    background-color: transparent;
+    border: none;
+    border-left: 3px solid transparent;
+    border-radius: 4px;
+    padding: 12px 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: left;
     display: flex;
     flex-direction: column;
@@ -431,20 +436,20 @@ onMounted(() => {
 
     .nav-year {
       font-size: 0.75rem;
-      color: #5fd4cc;
-      font-weight: 600;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 500;
+      letter-spacing: 0.5px;
     }
 
     .nav-title {
-      font-size: 0.85rem;
-      color: #c7c7c7;
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.87);
       font-weight: 500;
     }
 
     &:hover {
-      background-color: rgba(32, 178, 170, 0.2);
-      border-color: rgba(32, 178, 170, 0.5);
-      transform: translateX(5px);
+      background-color: rgba(32, 178, 170, 0.08);
+      border-left-color: rgba(32, 178, 170, 0.5);
 
       .nav-title {
         color: #fff;
@@ -452,12 +457,12 @@ onMounted(() => {
     }
 
     &.active {
-      background-color: rgba(32, 178, 170, 0.3);
-      border-color: #20b2aa;
-      border-width: 3px;
+      background-color: rgba(32, 178, 170, 0.15);
+      border-left-color: #20b2aa;
 
       .nav-year {
         color: #20b2aa;
+        font-weight: 600;
       }
 
       .nav-title {
@@ -476,14 +481,21 @@ onMounted(() => {
 }
 
 .project-card {
-  background: linear-gradient(135deg, rgba(32, 178, 170, 0.1) 0%, rgba(13, 45, 45, 0.6) 100%);
-  border: 2px solid rgba(32, 178, 170, 0.3);
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 32px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: grid;
-  gap: 30px;
+  gap: 32px;
   scroll-margin-top: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-color: rgba(32, 178, 170, 0.3);
+  }
 
   // Use 2 columns when images exist, 1 column when no images
   &:has(.project-image) {
@@ -499,10 +511,11 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
   overflow: hidden;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 
   .image-carousel {
     position: relative;
@@ -562,20 +575,22 @@ onMounted(() => {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background-color: rgba(32, 178, 170, 0.2);
-      border: 2px solid rgba(32, 178, 170, 0.4);
-      color: #5fd4cc;
+      background-color: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(4px);
+      border: none;
+      color: #1a1a1a;
       font-size: 1.5rem;
       width: 40px;
       height: 40px;
       border-radius: 50%;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 2;
       padding-bottom: 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
       &.prev {
         left: 10px;
@@ -586,8 +601,9 @@ onMounted(() => {
       }
 
       &:hover:not(:disabled) {
-        background-color: rgba(32, 178, 170, 0.3);
-        border-color: #20b2aa;
+        background-color: #fff;
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
       }
 
       &:disabled {
@@ -602,26 +618,31 @@ onMounted(() => {
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 8px;
+      gap: 6px;
       z-index: 2;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      padding: 8px 12px;
+      border-radius: 16px;
 
       .indicator {
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
-        background-color: rgba(95, 212, 204, 0.3);
-        border: 1px solid rgba(32, 178, 170, 0.5);
+        background-color: rgba(255, 255, 255, 0.5);
+        border: none;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
         &:hover {
-          background-color: rgba(95, 212, 204, 0.5);
+          background-color: rgba(255, 255, 255, 0.8);
+          transform: scale(1.2);
         }
 
         &.active {
           background-color: #20b2aa;
-          width: 24px;
-          border-radius: 4px;
+          width: 20px;
+          border-radius: 3px;
         }
       }
     }
@@ -634,45 +655,56 @@ onMounted(() => {
   justify-content: center;
 
   h2 {
-    font-size: 2rem;
-    color: #20b2aa;
-    margin: 0;
-    font-family: 'Bungee';
+    font-size: 1.75rem;
+    color: #fff;
+    margin: 0 0 8px 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
   }
 
   .project-year {
-    font-size: 1rem;
-    color: #5fd4cc;
+    font-size: 0.875rem;
+    color: #20b2aa;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
   }
 
   .project-description {
-    color: #c7c7c7;
-    line-height: 1.6;
-    margin-bottom: 25px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
   }
 }
 
 .project-tech {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 8px;
+  margin-bottom: 24px;
 
   .tech-tag {
-    background-color: rgba(32, 178, 170, 0.2);
-    color: #5fd4cc;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border: 1px solid rgba(32, 178, 170, 0.4);
+    background-color: rgba(32, 178, 170, 0.1);
+    color: rgba(255, 255, 255, 0.87);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(32, 178, 170, 0.2);
+      border-color: rgba(32, 178, 170, 0.4);
+    }
   }
 }
 
 .project-links {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   margin-top: auto;
 
   .project-link {
@@ -680,33 +712,35 @@ onMounted(() => {
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    border-radius: 8px;
+    border-radius: 4px;
     text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: 2px solid rgba(32, 178, 170, 0.4);
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid;
 
     &.github {
-      background-color: rgba(32, 178, 170, 0.1);
-      color: #5fd4cc;
+      background-color: transparent;
+      color: rgba(255, 255, 255, 0.87);
+      border-color: rgba(255, 255, 255, 0.2);
 
       &:hover {
-        background-color: rgba(32, 178, 170, 0.2);
-        border-color: #20b2aa;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(32, 178, 170, 0.3);
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
       }
     }
 
     &.live {
       background-color: #20b2aa;
-      color: #0a1f1f;
+      color: #fff;
       border-color: #20b2aa;
 
       &:hover {
-        background-color: #5fd4cc;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(32, 178, 170, 0.5);
+        background-color: #1a9991;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(32, 178, 170, 0.4);
       }
     }
 

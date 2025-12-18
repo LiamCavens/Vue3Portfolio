@@ -82,7 +82,7 @@ onUnmounted(() => {
       <a class="link" :class="{ active: $route.path === '/portfolio' }" :style="{ color: themeColor }" @click="router.push('/portfolio')">Portfolio</a>
     </div>
 
-    <div class="change-mode">
+    <div v-if="$route.path === '/'" class="change-mode">
       <div class="mode-dropdown">
         <button 
           @click.stop="toggleDropdown"
