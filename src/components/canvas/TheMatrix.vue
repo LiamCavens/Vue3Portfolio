@@ -43,7 +43,7 @@ const columns = ref(0);
 const footerHeight = 100; // Height of the footer
 const mouseX = ref(0);
 const mouseY = ref(0);
-const bubbleRadius = 80; // Radius of the protective bubble
+const bubbleRadius = 150; // Radius of the protective bubble
 
 // Matrix characters - mix of katakana, latin, and numbers
 const matrixChars = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -94,7 +94,7 @@ const drawDrop = (drop: Drop) => {
     const distanceFromHead = currentRow - i;
     const charY = i * fontSize;
     // Adjust for text baseline - characters are drawn from baseline, not top
-    const charCenterY = charY - fontSize / 2;
+    const charCenterY = charY - fontSize / 2 - 10;
     
     // Check if this character is within the bubble
     const distanceToMouseForChar = Math.sqrt(
@@ -236,8 +236,11 @@ const handleClick = () => {
 };
 
 const handleMouseMove = (event: MouseEvent) => {
-  mouseX.value = event.clientX;
-  mouseY.value = event.clientY;
+  if (canvasRef.value) {
+    const rect = canvasRef.value.getBoundingClientRect();
+    mouseX.value = event.clientX - rect.left;
+    mouseY.value = event.clientY - rect.top;
+  }
 };
 
 const handleResize = () => {
